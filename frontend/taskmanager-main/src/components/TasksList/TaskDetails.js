@@ -6,45 +6,28 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import "./Taskcss/Task_Details.css";
 
 export const TaskDetails = ({ tasks }) => {
   const paramas = useParams();
-  //   console.log(paramas.id);
-  //   console.log(
-  //     tasks.map(
-  //       (currentTask) => currentTask.id === paramas.id && console.log(currentTask)
-  //     )
-  //   );
-  const style = {
-    // backgroundColor: "#ececff",
-    display: "block",
-    justifyContent: "center",
-    alignItems: "center",
-  };
-
-  const cardcolor = {
-    display: "flex",
-    backgroundColor: "#ccd7b7",
-    width: "100%",
-    height: "100%",
-    // height: "100vh",
-  };
-
-  const styleFlex = {
-    display: "flex",
-  };
+  const navigate = useNavigate();
 
   return (
-    <div style={cardcolor}>
-      <div style={styleFlex}>
+    <div className="card_body">
+      <div className="arrow_back">
+        <ArrowBackIcon onClick={() => navigate(-1)} />
+      </div>
+      <div className="flex_card">
         <div className="row col d-flex justify-content-center">
           {tasks.map(
             (currentTask) =>
               currentTask.teamId === paramas.id && (
-                <div style={{ padding: "1rem" }}>
+                <div className="padding_card">
                   <Card
                     sx={{ width: 345, height: 300, padding: 1 }}
-                    style={style}
+                    className="card"
                   >
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="div">
@@ -68,7 +51,7 @@ export const TaskDetails = ({ tasks }) => {
                         Delete
                       </Button>
                     </CardActions>
-                  </Card>{" "}
+                  </Card>
                 </div>
               )
           )}

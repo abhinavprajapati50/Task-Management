@@ -6,9 +6,9 @@ import LoginIcon from "@mui/icons-material/Login";
 function MainMenu() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <span className="navbar-brand" href="#">
-      Task Management APP
-      </span>
+      <Link to="/">
+        <span className="navbar-brand">Task Management APP</span>
+      </Link>
       <button
         className="navbar-toggler"
         type="button"
@@ -22,7 +22,9 @@ function MainMenu() {
       </button>
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav">
-         
+          <Link className="nav-link" to="/dashboard">
+            <li className="nav-item">Dashboard</li>
+          </Link>
           <Link className="nav-link" to="/">
             <li className="nav-item">Tasks</li>
           </Link>
@@ -40,8 +42,11 @@ function MainMenu() {
           </Link>
         </ul>
       </div>
-      <Link className="nav-link" to="/login" >
-        <Button className="nav-item" style={{ float: "right", backgroundColor: "#912f2f", color:"white"}}>
+      <Link className="nav-link" to="/login">
+        <Button
+          className="nav-item"
+          style={{ float: "right", backgroundColor: "#912f2f", color: "white" }}
+        >
           Login
           <LoginIcon />
         </Button>

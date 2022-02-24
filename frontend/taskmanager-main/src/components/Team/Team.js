@@ -6,13 +6,15 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
+import "../Team/Team.css"
 
 export const Team = ({ team }) => {
   const style = {
     display: "flex",
   };
   const cardStyle = {
-    backgroundColor: "#ccd7b7",
+    backgroundColor: "red",
+    // backgroundColor: "#ccd7b7",
     width: "100%",
     height: "100vh",
   };
@@ -22,15 +24,16 @@ export const Team = ({ team }) => {
   };
 
   return (
-    <div style={cardStyle}>
+    <div  className="card_Styles">
       <div >
-        <div style={style}>
+        <div >
           <div className="row col d-flex justify-content-center">
             {team.map((team) => (
-              <div style={{ padding: "10px" }}>
+              <div className="card_padding">
                 <Card
                   sx={{ width: 345 }}
-                  style={{ padding: "1rem" }}
+                  // style={{ padding: "1rem" }}
+                  className="card_padding"
                   key={team.id}
                 >
                   <CardContent>

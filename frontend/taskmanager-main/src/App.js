@@ -12,6 +12,7 @@ import { TeamDetails } from "./components/Team/TeamDetails";
 import { TaskDetails } from "./components/TasksList/TaskDetails";
 import { CompletedTask } from "./components/TasksList/completedTask";
 import { PendingTask } from "./components/TasksList/PendingTask";
+import { Dashboard } from "./components/Dashboard/Dashboard";
 
 function App() {
   const [tasks, setTasks] = useState([
@@ -199,6 +200,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
+        
         <MainMenu />
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -209,6 +211,7 @@ function App() {
           <Route path="/pendingtask" element={<PendingTask tasks={tasks} />} />
           <Route path="/team" element={<Team team={team} />} />
           <Route path="/team/:id" element={<TeamDetails team={team} />} />
+          <Route path="/dashboard" element={<Dashboard tasks={tasks} />} />
         </Routes>
       </BrowserRouter>
     </>

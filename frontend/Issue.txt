@@ -1,0 +1,2 @@
+1) in TaskDetails if we have one card then height is 50% and manay card have 100% height
+ 

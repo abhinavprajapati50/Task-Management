@@ -1,0 +1,15 @@
+.card_color{
+    background-color: #ccd7b7;
+    width: 100%;
+    height: 100%;
+    height: 100vh;
+}
+
+.arrow_back {
+    padding-left: 5px;
+    cursor: pointer;
+    background-color: rgb(177, 199, 175);
+    color: red;
+    width: 7.1rem;
+    height: 2rem;
+  }
