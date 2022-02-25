@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { BrowserRouter, Route, Routes, Switch } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  Switch,
+  Navigate,
+} from "react-router-dom";
 
 import MainMenu from "./components/MainMenu/MainMenu";
 import TasksList from "./components/TasksList/TasksList";
@@ -13,6 +19,7 @@ import { TaskDetails } from "./components/TasksList/TaskDetails";
 import { CompletedTask } from "./components/TasksList/completedTask";
 import { PendingTask } from "./components/TasksList/PendingTask";
 import { Dashboard } from "./components/Dashboard/Dashboard";
+import { ForgotPassword } from "./components/Login/ForgotPassword";
 
 function App() {
   const [tasks, setTasks] = useState([
@@ -25,7 +32,7 @@ function App() {
       dueDate: moment().add(3, "days").format("DD-MM-yyyy"),
       status: "completed",
       Assign: "abhinav",
-      completed: true
+      completed: true,
     },
     {
       id: "2",
@@ -36,7 +43,7 @@ function App() {
       dueDate: moment().add(3, "days").format("DD-MM-yyyy"),
       status: "New",
       Assign: "bhavesh",
-      completed: true
+      completed: true,
     },
     {
       id: "3",
@@ -48,7 +55,7 @@ function App() {
       dueDate: moment().add(3, "days").format("DD-MM-yyyy"),
       status: "New",
       Assign: "data",
-      completed: true
+      completed: true,
     },
     {
       id: "4",
@@ -60,7 +67,7 @@ function App() {
       dueDate: moment().add(3, "days").format("DD-MM-yyyy"),
       status: "New",
       Assign: "hinal",
-      completed: false
+      completed: false,
     },
     {
       id: "5",
@@ -72,7 +79,7 @@ function App() {
       dueDate: moment().add(3, "days").format("DD-MM-yyyy"),
       status: "New",
       Assign: "abhay",
-      completed: false
+      completed: false,
     },
     {
       id: "6",
@@ -84,7 +91,7 @@ function App() {
       dueDate: moment().add(3, "days").format("DD-MM-yyyy"),
       status: "New",
       Assign: "abhinav",
-      completed: false
+      completed: false,
     },
     {
       id: "6",
@@ -96,7 +103,7 @@ function App() {
       dueDate: moment().add(3, "days").format("DD-MM-yyyy"),
       status: "New",
       Assign: "abhinav",
-      completed: false
+      completed: false,
     },
     {
       id: "6",
@@ -108,7 +115,7 @@ function App() {
       dueDate: moment().add(3, "days").format("DD-MM-yyyy"),
       status: "New",
       Assign: "abhinav",
-      completed: true
+      completed: true,
     },
     {
       id: "6",
@@ -120,7 +127,7 @@ function App() {
       dueDate: moment().add(3, "days").format("DD-MM-yyyy"),
       status: "New",
       Assign: "abhinav",
-      completed: true
+      completed: true,
     },
     {
       id: "6",
@@ -132,7 +139,7 @@ function App() {
       dueDate: moment().add(3, "days").format("DD-MM-yyyy"),
       status: "New",
       Assign: "abhinav",
-      completed: true
+      completed: true,
     },
     {
       id: "6",
@@ -144,7 +151,7 @@ function App() {
       dueDate: moment().add(3, "days").format("DD-MM-yyyy"),
       status: "New",
       Assign: "abhinav",
-      completed: true
+      completed: true,
     },
     {
       id: "6",
@@ -156,7 +163,7 @@ function App() {
       dueDate: moment().add(3, "days").format("DD-MM-yyyy"),
       status: "New",
       Assign: "abhinav",
-      completed: true
+      completed: true,
     },
   ]);
   let [team, setteam] = useState([
@@ -197,22 +204,54 @@ function App() {
       work: "Full stack developer",
     },
   ]);
+  const [isLoggedIN, setisLoggedIN] = useState(
+    localStorage.getItem("user") ? true : false
+  );
+  console.log("-------------=--=-isLoggedIN", isLoggedIN);
   return (
     <>
       <BrowserRouter>
-        
-        <MainMenu />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<TaskItem tasks={tasks} />} />
-          <Route path="/task/:id" element={<TaskDetails tasks={tasks} />} />
-          <Route path="/newtask" element={<TaskForm />} />
-          <Route path="/completedtask" element={<CompletedTask tasks={tasks} />} />
-          <Route path="/pendingtask" element={<PendingTask tasks={tasks} />} />
-          <Route path="/team" element={<Team team={team} />} />
-          <Route path="/team/:id" element={<TeamDetails team={team} />} />
-          <Route path="/dashboard" element={<Dashboard tasks={tasks} />} />
-        </Routes>
+        {!isLoggedIN && (
+          <>
+            <Routes>
+              <>
+                <Route
+                  path="/login"
+                  element={<Login setisLoggedIN={setisLoggedIN} />}
+                />
+                <Route path="/forgot-Password" element={<ForgotPassword />} />
+                <Route path="*" element={<Navigate replace to="/login" />} />
+              </>
+            </Routes>
+          </>
+        )}
+        {isLoggedIN && (
+          <>
+            <MainMenu setisLoggedIN={setisLoggedIN} />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <TaskItem setisLoggedIN={setisLoggedIN} tasks={tasks} />
+                }
+              />
+              <Route path="/task/:id" element={<TaskDetails tasks={tasks} />} />
+              <Route path="/newtask" element={<TaskForm />} />
+              <Route
+                path="/completedtask"
+                element={<CompletedTask tasks={tasks} />}
+              />
+              <Route
+                path="/pendingtask"
+                element={<PendingTask tasks={tasks} />}
+              />
+              <Route path="/team" element={<Team team={team} />} />
+              <Route path="/team/:id" element={<TeamDetails team={team} />} />
+              <Route path="/dashboard" element={<Dashboard tasks={tasks} />} />
+              <Route path="*" element={<Navigate replace to="/" />} />
+            </Routes>
+          </>
+        )}
       </BrowserRouter>
     </>
   );

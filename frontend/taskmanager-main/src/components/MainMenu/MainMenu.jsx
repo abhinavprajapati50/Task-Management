@@ -1,9 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import LoginIcon from "@mui/icons-material/Login";
 
-function MainMenu() {
+function MainMenu({ setisLoggedIN }) {
+  const navigate = useNavigate();
+
+
+  const logoutHandler = () => {
+    localStorage.removeItem("user")
+    setisLoggedIN(false)
+    navigate("/", { return: true });
+
+  }
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <Link to="/">
@@ -46,8 +55,9 @@ function MainMenu() {
         <Button
           className="nav-item"
           style={{ float: "right", backgroundColor: "#912f2f", color: "white" }}
+          onClick={logoutHandler}
         >
-          Login
+          Logout
           <LoginIcon />
         </Button>
       </Link>

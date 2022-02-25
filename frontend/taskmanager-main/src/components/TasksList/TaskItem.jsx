@@ -8,9 +8,9 @@ import Typography from "@mui/material/Typography";
 // import "./Taskcss/Task_Item.css";
 import "./Taskcss/Task_Item.css"
 
-function TaskItem({ tasks }) {
+function TaskItem({ tasks,setisLoggedIN }) {
   const [done, setDone] = useState(false);
-
+  setisLoggedIN(true)
   // console.log(borderColor);
   return (
     <div className="cardStyle">
