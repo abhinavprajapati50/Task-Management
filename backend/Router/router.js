@@ -18,6 +18,8 @@ const {
   deleteService,
   allService,
 } = require("../Controller/adminServices");
+const { task } = require("../Controller/task");
+const { team } = require("../Controller/Team");
 const { signUpRoute, signin } = require("../Controller/userController");
 const upload = require("../imageuploader");
 const authExisting = require("../Middleware/authUser");
@@ -31,6 +33,10 @@ router.get("/", (req, res) => {
 // ------USER
 router.post("/signup", [authExisting.checkEmail] , signUpRoute);
 router.post("/signin", signin);
+
+// ---------TASK
+router.post("/task", task);
+router.post("/team", team);
 
 // -----------------------------MENU
 
