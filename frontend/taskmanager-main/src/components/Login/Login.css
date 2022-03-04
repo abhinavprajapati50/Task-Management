@@ -7,6 +7,28 @@
   font-family: 'Poppins', sans-serif;
 }
 
+.errorMessage{
+  /* border: 1px solid blue !important;
+
+    box-shadow: 0 0 3px blue !important; */
+    color: red;
+    align-items: center;
+    justify-content: center;
+}
+
+/* .visibleEye{
+  
+} */
+
+.check_showpassword{
+  width: auto !important;
+}
+
+.check_showpassword{
+  width:auto;
+  background-color:red;
+  height:1rem
+}
 
 /* --------------------INPUT */
 .inputType{

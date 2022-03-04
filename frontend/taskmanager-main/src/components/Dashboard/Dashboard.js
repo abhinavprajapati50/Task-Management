@@ -18,6 +18,7 @@ import {
 } from "recharts";
 import { Grid } from "@mui/material";
 import "./Dashboard.css"
+import { ToastContainer } from "react-toastify";
 
 const cardStyle = {
   backgroundColor: "#ccd7b7",
@@ -38,6 +39,7 @@ export const Dashboard = ({ tasks }) => {
   return (
     <div>
       <div  className="Dashboard">
+      <ToastContainer />
         <div>
           <div >
             <div className="row col d-flex justify-content-center">

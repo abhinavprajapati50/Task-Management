@@ -20,6 +20,8 @@ import { CompletedTask } from "./components/TasksList/completedTask";
 import { PendingTask } from "./components/TasksList/PendingTask";
 import { Dashboard } from "./components/Dashboard/Dashboard";
 import { ForgotPassword } from "./components/Login/ForgotPassword";
+import { ToastContainer } from "react-toastify";
+import { useSelector } from "react-redux";
 
 function App() {
   const [tasks, setTasks] = useState([
@@ -204,14 +206,21 @@ function App() {
       work: "Full stack developer",
     },
   ]);
+
+  // const user = useSelector(states => states);
+  // console.log("-------------------------=-=", user);
   const [isLoggedIN, setisLoggedIN] = useState(
-    localStorage.getItem("user") ? true : false
+    localStorage.getItem("token") ? true : false
   );
-  console.log("-------------=--=-isLoggedIN", isLoggedIN);
+  const authuser = useSelector((state) => state.user);
+  console.log(authuser);
+
+  // console.log("-------------=--=-isLoggedIN", authuser);
   return (
     <>
+      <ToastContainer />
       <BrowserRouter>
-        {!isLoggedIN && (
+        { !isLoggedIN && (
           <>
             <Routes>
               <>
@@ -225,7 +234,7 @@ function App() {
             </Routes>
           </>
         )}
-        {isLoggedIN && (
+        { isLoggedIN && (
           <>
             <MainMenu setisLoggedIN={setisLoggedIN} />
             <Routes>

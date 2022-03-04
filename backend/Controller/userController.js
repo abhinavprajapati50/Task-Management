@@ -9,7 +9,7 @@ const jwtTokenHandler = (id) => {
 };
 
 exports.signUpRoute = async (req, res, next) => {
-  const { email, password, username, registerConfirmPassword } = req.body;
+  const { email, password, username, confirmpassword } = req.body;
   const emailRegexp =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -17,7 +17,8 @@ exports.signUpRoute = async (req, res, next) => {
     /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
   console.log("--------------77777777887", req.body);
   try {
-    // if (!username || !password || !email || !registerConfirmPassword) {
+    
+    // if (!username || !password || !email || !confirmpassword) {
     //   return res
     //     .status(200)
     //     .json({ status: false, message: "All Field required!!" });
@@ -38,10 +39,10 @@ exports.signUpRoute = async (req, res, next) => {
         .status(200)
         .json({ status: false, message: "Plz fill the password" });
     }
-    if (!registerConfirmPassword) {
+    if (!confirmpassword) {
       return res.status(200).json({
         status: false,
-        message: "Plz fill the registerConfirmPassword",
+        message: "Plz fill the confirmpassword",
       });
     }
 
@@ -59,32 +60,32 @@ exports.signUpRoute = async (req, res, next) => {
       return false;
     }
 
-    if (!regularExpression.test(registerConfirmPassword)) {
+    if (!regularExpression.test(confirmpassword)) {
       res.status(200).json({
         status: false,
         message:
-          "plz fill valid registerConfirmPassword  */ fill one lowercase,one uppercase, one digit,valid 6 to 16",
+          "plz fill valid confirmpassword  */ fill one lowercase,one uppercase, one digit,valid 6 to 16",
       });
       return false;
     }
-    if (password !== registerConfirmPassword) {
+    if (password !== confirmpassword) {
       return res
         .status(200)
         .json({ status: false, message: "Password could not be matched" });
     }
 
     console.log("---------=-=", req.body);
-    const data = await User.findOne({ where: { email: email } });
+    // const data = await User.findOne({ where: { email: email } });
 
-    if (data) {
-      return res.status(200).json({
-        status: false,
-        message:
-          "This email is already is exist !!! Please use different email!!",
-      });
-    }
+    // if (data) {
+    //   return res.status(200).json({
+    //     status: false,
+    //     message:
+    //       "This email is already is exist !!! Please use different email!!",
+    //   });
+    // }
 
-    console.log("---------------=-the data", data);
+    // console.log("---------------=-the data", data);
 
     const bcryptPass = await bcrypt.hash(password, 12);
     console.log("------------password", password);
@@ -95,8 +96,8 @@ exports.signUpRoute = async (req, res, next) => {
     });
     const token = jwtTokenHandler(result.id);
 
-    console.log("--------------=-token", token);
-    console.log("--------------=-req.headers", req.headers);
+    console.log("--------------=-token", result);
+    // console.log("--------------=-req.headers", req.headers);
 
     if (result) {
       return res.status(200).json({
@@ -109,8 +110,8 @@ exports.signUpRoute = async (req, res, next) => {
   } catch (error) {
     return res.status(500).json({
       status: false,
-      message: "Somethings wants!!",
-      data: error.message,
+      message: "Somethings wants wrong!!",
+      data: error.message || error,
     });
   }
 };

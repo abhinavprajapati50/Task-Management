@@ -7,14 +7,18 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 // import "./Taskcss/Task_Item.css";
 import "./Taskcss/Task_Item.css"
+import { useSelector } from "react-redux";
 
-function TaskItem({ tasks,setisLoggedIN }) {
-  const [done, setDone] = useState(false);
+function TaskItem({ tasks, setisLoggedIN }) {
+  const Loader = useSelector((state) => state.user.loading);
+
+
+  console.log("-------------=-=-=-=Loader",Loader);
   setisLoggedIN(true)
   // console.log(borderColor);
   return (
     <div className="cardStyle">
-      {done ? (
+      {Loader ? (
         <img src="./images/task.gif" alt="" width="100%" height="560vh" />
       ) : (
         <div>

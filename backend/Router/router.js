@@ -20,6 +20,7 @@ const {
 } = require("../Controller/adminServices");
 const { signUpRoute, signin } = require("../Controller/userController");
 const upload = require("../imageuploader");
+const authExisting = require("../Middleware/authUser");
 
 const router = require("express").Router();
 
@@ -28,7 +29,7 @@ router.get("/", (req, res) => {
 });
 
 // ------USER
-router.post("/signup", signUpRoute);
+router.post("/signup", [authExisting.checkEmail] , signUpRoute);
 router.post("/signin", signin);
 
 // -----------------------------MENU

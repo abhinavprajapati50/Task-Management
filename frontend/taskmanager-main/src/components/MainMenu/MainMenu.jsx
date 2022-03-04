@@ -1,18 +1,26 @@
 import React from "react";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import LoginIcon from "@mui/icons-material/Login";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../New_Redux/Actions";
 
 function MainMenu({ setisLoggedIN }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const userExist = useSelector((state) => state.user);
+  console.log("-=-=-userExist", userExist);
 
   const logoutHandler = () => {
-    localStorage.removeItem("user")
-    setisLoggedIN(false)
-    navigate("/", { return: true });
-
-  }
+    localStorage.removeItem("token");
+    setisLoggedIN(false);
+    if (userExist) {
+      dispatch(logout());
+    }
+    // dispatch(authsUserAction.logggedOutUser())
+    navigate("/login", { return: true });
+  };
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <Link to="/">
