@@ -15,3 +15,8 @@
   width: 100%;
   padding: 3rem;
 }
+
+.error{
+  /* border: 1px solid red; */
+  color:  red;
+}

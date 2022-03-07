@@ -9,3 +9,14 @@
 .card_padding{
     padding:1rem
 }
+
+.add_button{
+    float:right;
+    background-color: #98b6af;
+    /* color: white !important; */
+    
+}
+
+.unstyled_Add_team_text{
+    margin-left: 3rem;
+}

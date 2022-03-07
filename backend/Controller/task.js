@@ -1,39 +1,25 @@
-const taskModal = require("../Model/TaskModal");
+const taskModal = require("../Model/taskModal");
 
 exports.task = async (req, res, next) => {
-  //   const { title, slug, description, chr_delete } = req.body;
-  const {
-    task,
-    teamId,
-    description,
-    dueDate,
-    status,
-    Assign_to,
-    completed,
-    chr_delete,
-  } = req.body;
+  const { task, description, dueDate, Assign_to, status, chr_delete } =
+    req.body;
   if (
     !task ||
-    !teamId ||
     !description ||
     !dueDate ||
-    !status ||
-    !Assign_to ||
-    !completed
+    !Assign_to
   ) {
     return res
-      .status(400)
+      .status(200)
       .json({ status: false, message: "All field required" });
   }
   try {
     const result_Task = await taskModal.create({
       task,
-      teamId,
       description,
       dueDate,
-      status,
       Assign_to,
-      completed,
+      status,
       chr_delete,
     });
     // --
@@ -82,6 +68,26 @@ exports.task = async (req, res, next) => {
     res.status(500).json({
       status: false,
       message: "Task is not Created",
+      data: error || error.message,
+    });
+  }
+};
+exports.AllTask = async (req, res, next) => {
+  try {
+    const result_Task = await taskModal.findAll();
+    // --
+    console.log(result_Task);
+    let resMessage = "All Task rendered successfully.";
+
+    res.status(200).json({
+      status: true,
+      message: resMessage,
+      data: result_Task,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: "Tasks is not redered!!!",
       data: error || error.message,
     });
   }

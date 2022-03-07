@@ -1,27 +1,27 @@
-const { jwtAuth } = require("../authentication/auth");
-const {
-  manageMenu,
-  allMenu,
-  deleteMenu,
-  updateManu,
-  parent_ChildMenu,
-} = require("../Controller/adminMenu");
-const {
-  adminPages,
-  allPages,
-  deletePage,
-  updatePage,
-} = require("../Controller/adminPages");
-const {
-  manageService,
-  updateService,
-  deleteService,
-  allService,
-} = require("../Controller/adminServices");
-const { task } = require("../Controller/task");
-const { team } = require("../Controller/Team");
-const { signUpRoute, signin } = require("../Controller/userController");
+// const { jwtAuth } = require("../authentication/auth");
+// const {
+//   manageMenu,
+//   allMenu,
+//   deleteMenu,
+//   updateManu,
+//   parent_ChildMenu,
+// } = require("../Controller/adminMenu");
+// const {
+//   adminPages,
+//   allPages,
+//   deletePage,
+//   updatePage,
+// } = require("../Controller/adminPages");
+// const {
+//   manageService,
+//   updateService,
+//   deleteService,
+//   allService,
+// } = require("../Controller/adminServices");
 const upload = require("../imageuploader");
+const { signUpRoute, signin } = require("../Controller/userController");
+const { task, AllTask } = require("../Controller/task");
+const { team, Allteam } = require("../Controller/Team");
 const authExisting = require("../Middleware/authUser");
 
 const router = require("express").Router();
@@ -36,7 +36,12 @@ router.post("/signin", signin);
 
 // ---------TASK
 router.post("/task", task);
+router.get("/task", AllTask);
+
+
+// ------------TEAM
 router.post("/team", team);
+router.get("/team", Allteam);
 
 // -----------------------------MENU
 

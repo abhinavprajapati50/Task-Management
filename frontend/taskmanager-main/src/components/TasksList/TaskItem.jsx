@@ -12,7 +12,6 @@ import { useSelector } from "react-redux";
 function TaskItem({ tasks, setisLoggedIN }) {
   const Loader = useSelector((state) => state.user.loading);
 
-
   console.log("-------------=-=-=-=Loader",Loader);
   setisLoggedIN(true)
   // console.log(borderColor);
