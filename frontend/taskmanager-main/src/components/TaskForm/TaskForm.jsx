@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 
 function TaskForm() {
   const [dead_line, setdead_line] = useState(new Date());
-  const [Assign_to, setAssign_to] = useState("");
+  const [Assign_to, setAssign_to] = useState(null);
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
   const [teamData, setteamData] = useState([]);
@@ -35,13 +35,15 @@ function TaskForm() {
   };
 
   const handleDate = (newValue) => {
-    setdead_line(newValue);
+    console.log("0-0-0-0-0",newValue.toDateString());
+    setdead_line(newValue.toDateString());
   };
-
-  const handleAllTeam = async () => {
+  const
+    handleAllTeam = async () => {
     const teamData = await axios.get("http://localhost:5000/team");
     setteamData(teamData.data.data);
   };
+
 
   const hnadleSubmit = async (e) => {
     e.preventDefault();
@@ -54,12 +56,13 @@ function TaskForm() {
       });
       seterror(resultTask.data.message);
       resultTask.data.data
-        ? toast.success(resultTask.data.message)
+        ? toast.success(resultTask.data.message) && navigate("/") && clearData()
         : toast.error(resultTask.data.message);
       console.log("-=-=-=-=-=-=resultTask", resultTask);
-      clearData();
+      
+      
     } catch (error) {
-      console.log(error);
+      console.log(error.message || error); ;
     }
   };
 
@@ -138,10 +141,11 @@ function TaskForm() {
                   label="Date"
                   value={Assign_to}
                   onChange={handleChange}
-                  displayEmpty
+                  // displayEmpty
+                  defaultValue={null}
                   // inputProps={{ "aria-label": "Without label" }}
                 >
-                  <MenuItem value="">
+                  <MenuItem value={null}>
                     <em>None</em>
                   </MenuItem>
 

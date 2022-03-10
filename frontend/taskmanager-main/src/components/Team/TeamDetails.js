@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -9,12 +9,23 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import "./Team_Details.css";
+import axios from "axios";
+import { teamApi } from "../Api/api";
 
-export const TeamDetails = ({ team }) => {
+export const TeamDetails = () => {
   const paramas = useParams();
   const navigate = useNavigate();
-  console.log(paramas.id);
-  console.log(team);
+    const [allUser, setallUser] = useState([])
+
+  const getAllUser = async () => {
+    const allTeams = await axios.get(teamApi)
+    setallUser(allTeams.data.data)
+  }
+  useEffect( async () => {
+      getAllUser()
+  }, [])
+  
+  // console.log(paramas.id);
 
   return (
     <div className="card_color">
@@ -22,13 +33,14 @@ export const TeamDetails = ({ team }) => {
         <ArrowBackIcon onClick={() => navigate(-1)} />
       </div>
       <div className="row col d-flex justify-content-center">
-        {team.map((team) =>
-          team.id === paramas.id ? (
+        {allUser.map((team) =>
+          team.id == paramas.id  ? (
             <Card
               sx={{ width: 445, height: 345 }}
               style={{ paddingTop: "2rem", marginTop: "10%" }}
               key={team.id}
             >
+              {/* {console.log("--------=-=",team)} */}
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                   <h1>{team.name}</h1>

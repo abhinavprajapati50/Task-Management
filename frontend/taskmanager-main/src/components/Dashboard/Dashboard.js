@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -17,8 +17,10 @@ import {
   Cell,
 } from "recharts";
 import { Grid } from "@mui/material";
-import "./Dashboard.css"
+import "./Dashboard.css";
 import { ToastContainer } from "react-toastify";
+import { completedTaskLink, taskApi } from "../Api/api";
+import axios from "axios";
 
 const cardStyle = {
   backgroundColor: "#ccd7b7",
@@ -35,13 +37,29 @@ const PieChartData = [
   { name: "Group D", value: 200, color: "success" },
 ];
 
-export const Dashboard = ({ tasks }) => {
+export const Dashboard = () => {
+  const [allTasks, setAllTasks] = useState([]);
+  const [allCompletedTask, setAllCompletedTask] = useState([]);
+
+  const allTaskFunc = async () => {
+    const allTask = await axios.get(taskApi);
+    setAllTasks(allTask.data.data);
+    const  allCompletedTask = await axios.get(completedTaskLink );
+    setAllCompletedTask(allCompletedTask.data.data);
+     
+  };
+
+  console.log(allCompletedTask)
+  useEffect(() => {
+    allTaskFunc()
+  }, [])
+  
   return (
     <div>
-      <div  className="Dashboard">
-      <ToastContainer />
+      <div className="Dashboard">
+        <ToastContainer />
         <div>
-          <div >
+          <div>
             <div className="row col d-flex justify-content-center">
               <div style={{ padding: "1rem" }}>
                 <Card
@@ -62,7 +80,7 @@ export const Dashboard = ({ tasks }) => {
                     </Typography>
                     {/* { tasks.map(currentTask => currentTask && currentTask.completed == true )} */}
                     <Typography gutterBottom variant="h5" component="div">
-                      7
+                      {allCompletedTask.length}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -81,7 +99,7 @@ export const Dashboard = ({ tasks }) => {
                       All Task
                     </Typography>
                     <Typography gutterBottom variant="h5" component="div">
-                      {tasks.length}
+                      {allTasks.length}
                     </Typography>
                     <Grid item xs={6}>
                       <ResponsiveContainer width="100%" height={144}>
@@ -124,12 +142,11 @@ export const Dashboard = ({ tasks }) => {
                       Pending Task
                     </Typography>
                     <Typography gutterBottom variant="h5" component="div">
-                      5
+                    {allTasks.length - allCompletedTask.length}
                     </Typography>
                   </CardContent>
                 </Card>
               </div>
-              
             </div>
           </div>
         </div>

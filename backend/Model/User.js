@@ -26,9 +26,8 @@ const User = sequelizeDB.define("signUpUser", {
     allowNull: true,
   },
 
-  confirmpassword: {
-    type: Sequelize.STRING,
-    allowNull: true,
+  role: {
+    type: Sequelize.INTEGER,
   },
 });
 

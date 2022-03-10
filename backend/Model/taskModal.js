@@ -13,14 +13,21 @@ const taskModal = sequelizeDb.define("task", {
     type: Sequelize.DATE,
   },
   Assign_to: {
-    type: Sequelize.STRING,
+    type: Sequelize.INTEGER,
+    
+    defaultValue: null
   },
   status: {
-    type: Sequelize.BOOLEAN,
+    type: Sequelize.ENUM,
+    // type: Sequelize.ENUM('Pending', 'Completed', 'Rejected')
+    values: ['pending', 'completed', 'rejected']
+    // values: ['Pending', 'Completed', 'Rejected']
+    // type: Sequelize.Sequelize.ENUM("Pending", "Completed", "Rejected"),
   },
   chr_delete: {
     type: Sequelize.TINYINT,
   },
-});
+}
+);
 
 module.exports = taskModal;

@@ -8,6 +8,12 @@ const upload = require("./imageuploader");
 const path = require("path");
 const { default: helmet } = require("helmet");
 const compression = require("compression");
+const { Allteam } = require("./Controller/Team");
+const { AllTask } = require("./Controller/task");
+const teamModal = require("./Model/TeamModal");
+const taskModal = require("./Model/taskModal");
+
+
 require("dotenv").config();
 
 app.use(cors());
@@ -45,6 +51,23 @@ sequelize
     app.listen(process.env.PORT || PORT, () => {
       console.log(`the post is listning on ${PORT}`);
     });
+    teamModal.hasMany(taskModal , { foreignKey: "Assign_to" });
+    taskModal.belongsTo(teamModal, { foreignKey: "Assign_to" });
+
+    
+    
+    // teamModal.hasMany(taskModal , { foreignKey: "Assign_to" });
+    // taskModal.belongsToMany(teamModal , { foreignKey: "Assign_to" });
+   
+
+    taskModal.addScope("checkStatus", {
+      where: {
+        status: 1,
+        chr_delete:0
+      }
+    });
+
+
   })
   .catch((err) => {
     console.log("-----err appjs sequlize", err);

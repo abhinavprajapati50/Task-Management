@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -18,6 +18,9 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import axios from "axios";
 import { teamApi } from "../Api/api";
+import { useNavigate } from "react-router-dom";
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -60,30 +63,37 @@ const Backdrop = styled("div")`
 `;
 
 const style = {
-  width: 400,
+  width: 500,
   height: 400,
   // bgcolor: "background.paper",
   bgcolor: "white",
   border: "2px solid #000",
-  p: 2,
+  p: 3,
   px: 4,
   pb: 3,
 };
 
-export const Team = ({ team }) => {
-  const [open,     setOpen] = React.useState(false);
+export const Team = () => {
+  const [open, setOpen] = React.useState(false);
   const [fullName, setFullName] = useState("");
-  const [gender,   setGender] = useState("");
-  const [role,     setRole] = useState("");
+  const [gender, setGender] = useState("");
+  const [role, setRole] = useState("");
+  const [team, setteam] = useState([]);
   const classes = useStyles();
-  
+  const navigate = useNavigate();
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
-    setOpen(false)
-    clearState()
+    setOpen(false);
+    clearState();
   };
-  const showTaskHandler = (id) => {
+  const showTaskHandler = async (id) => {
     console.log("taskHadnler", id);
+
+    // const singleUser = await axios.get(`http://localhost:5000/team/${userId}`);
+    // console.log("----------------singleUser", singleUser.data.data);
+    // navigate(`/team/${singleUser.data.data.id}`)
+
   };
 
   const handleSubmit = async (e) => {
@@ -96,22 +106,41 @@ export const Team = ({ team }) => {
       work: role,
     });
 
-    clearState()
+    clearState();
     console.log(result);
     handleClose();
   };
 
-  const clearState = (e) => {
-    setFullName("")
-setGender("")
-setRole("")
+  const singleUserHandler = async (userId) => {
+    const singleUser = await axios.get(`http://localhost:5000/team/${userId}`);
+    console.log("----------------singleUser", singleUser.data.data);
+    navigate(`/team/${singleUser.data.data.id}`)
+    
   };
+
+  const clearState = (e) => {
+    setFullName("");
+    setGender("");
+    setRole("");
+  };
+
+  const AllTeamUser = async (e) => {
+    const team = await axios.get(teamApi);
+    setteam(team.data.data);
+  };
+
+  useEffect(async () => {
+    AllTeamUser();
+  }, [fullName]);
 
   return (
     <div className="card_Styles">
       <div>
         <div className="add_button">
-          <Button onClick={handleOpen}> Add Team-Member</Button>
+          <Button onClick={handleOpen} variant="contained" color="primary">
+            {" "}
+            Add Team-Member
+          </Button>
         </div>
         <div className="addmodal">
           <StyledModal
@@ -168,7 +197,7 @@ setRole("")
                       Cancel
                     </Button>
                     <Button type="submit" variant="contained" color="primary">
-                      Signup
+                      Add Team-Member
                     </Button>
                   </div>
                 </FormControl>
@@ -196,9 +225,15 @@ setRole("")
                     <Typography variant="body2" color="text.secondary">
                       {team.work}
                     </Typography>
-                    <Link to={`/team/${team.id}`}>
-                      <Button>View</Button>
-                    </Link>
+                    {/* <Link to={`/team/${team.id}`}> */}
+                      <Button
+                        onClick={() => {
+                          singleUserHandler(team.id);
+                        }}
+                      >
+                        View
+                      </Button>
+                    {/* </Link> */}
 
                     <Link to={`/task/${team.id}`}>
                       <Button onClick={() => showTaskHandler(team.id)}>

@@ -1,14 +1,10 @@
 const taskModal = require("../Model/taskModal");
+const teamModal = require("../Model/TeamModal");
 
 exports.task = async (req, res, next) => {
   const { task, description, dueDate, Assign_to, status, chr_delete } =
     req.body;
-  if (
-    !task ||
-    !description ||
-    !dueDate ||
-    !Assign_to
-  ) {
+  if (!task || !description || !dueDate ) {
     return res
       .status(200)
       .json({ status: false, message: "All field required" });
@@ -68,15 +64,21 @@ exports.task = async (req, res, next) => {
     res.status(500).json({
       status: false,
       message: "Task is not Created",
-      data: error || error.message,
+      data:  error.message,
     });
   }
 };
 exports.AllTask = async (req, res, next) => {
   try {
-    const result_Task = await taskModal.findAll();
+    const result_Task = await taskModal.findAll({
+      order: [
+        ['id', 'DESC'],
+      ],
+      include: teamModal,
+      // //   attributes:['id' ]
+      // where: { id: req.body.id },
+    });
     // --
-    console.log(result_Task);
     let resMessage = "All Task rendered successfully.";
 
     res.status(200).json({
@@ -88,6 +90,60 @@ exports.AllTask = async (req, res, next) => {
     res.status(500).json({
       status: false,
       message: "Tasks is not redered!!!",
+      data: error || error.message,
+    });
+  }
+};
+
+// completedTask
+
+exports.completedTask = async (req, res, next) => {
+  // const { status } = req.body;
+
+  try {
+    let id = req.params.id;
+    const comhpletedTask = await taskModal.update(
+      { status: 1 },
+      // { status: "1" },
+      { where: { id: id }}
+    );
+    res.status(200).json({
+      status: true,
+      message: "Task Completed successfully",
+      data: comhpletedTask,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: false,
+      message: "Somethings wents wrong",
+      data: error || error.message,
+    });
+  }
+};
+
+exports.deletedTask = async (req, res) => {
+  try {
+    let id = req.params.id;
+
+    const deletedTask = await taskModal.update(
+    {
+        chr_delete: "1",
+      },
+      { where: { id: id } }
+    );
+    let resMessage = "Task Successfully Deleted.";
+
+    res.status(200).json({
+      status: true,
+      message: resMessage,
+      data: deletedTask,
+    });
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({
+      status: false,
+      message: " Somethings wents wrong",
       data: error || error.message,
     });
   }

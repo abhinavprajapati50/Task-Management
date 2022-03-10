@@ -6,6 +6,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 // import { useNavigate } from "react-router-dom";
+import Box from '@mui/material/Box';
+
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import Checkbox from "@mui/material/Checkbox";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -26,7 +32,7 @@ export const Login = ({ setisLoggedIN }) => {
   const [visibility, setVisibility] = useState(false);
 
   const [username, setusername] = useState("");
-  const [registerEmail, setregisterEmail] = useState("");
+  const [role, setRole] = useState(2);
   const [registerPassword, setregisterPassword] = useState("");
   const [registerConfirmPassword, setregisterConfirmPassword] = useState("");
   const [usernameError, setusernameError] = useState(false);
@@ -34,6 +40,7 @@ export const Login = ({ setisLoggedIN }) => {
   const [registerPassError, setregisterPassError] = useState(false);
   const [registerConfirmPassError, setregisterConfirmPassError] =
     useState(false);
+  const [age, setAge] = React.useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -44,6 +51,10 @@ export const Login = ({ setisLoggedIN }) => {
 
   const label = visibility ? "aria-label" : "Checkbox demo";
 
+  const handleChange = (event) => {
+    setRole(event.target.value);
+  };
+
   const toggleForm = () => {
     const container = document.querySelector(".container");
     container.classList.toggle("active");
@@ -52,7 +63,7 @@ export const Login = ({ setisLoggedIN }) => {
 
   useEffect(() => {
     console.log(user);
-  },[]);
+  }, []);
 
   const signUpHandler = async (event) => {
     event.preventDefault();
@@ -67,6 +78,7 @@ export const Login = ({ setisLoggedIN }) => {
         username: username,
         email: email,
         password: password,
+        role:role,
         confirmpassword: registerConfirmPassword,
       });
       console.log(result);
@@ -150,6 +162,7 @@ export const Login = ({ setisLoggedIN }) => {
     setEmailError(false);
     setPassError(false);
   };
+  console.log("0-0-------------------role", role);
   return (
     <div>
       {/* Login */}
@@ -274,6 +287,22 @@ export const Login = ({ setisLoggedIN }) => {
                       Plz enter your Confirm Password.
                     </small>
                   )}
+                      <Box sx={{ minWidth: 120 }}>
+
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Select Role</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={role}
+                      label="Role"
+                      onChange={handleChange}
+                    >
+                      <MenuItem value={1}>Project Manager</MenuItem>
+                      <MenuItem value={2}>Employee</MenuItem>
+                    </Select>
+                  </FormControl>
+                  </Box>
                   <div>
                     <input type="submit" name="" value="Sign Up" />
                     <p className="signup">

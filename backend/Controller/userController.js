@@ -9,15 +9,15 @@ const jwtTokenHandler = (id) => {
 };
 
 exports.signUpRoute = async (req, res, next) => {
-  const { email, password, username, confirmpassword } = req.body;
+  const { email, password, username, confirmpassword,role } = req.body;
   const emailRegexp =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  
   const regularExpression =
-    /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-  console.log("--------------77777777887", req.body);
-  try {
-    
+  /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+  console.log("------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>", req.body);
+  try { 
+
     // if (!username || !password || !email || !confirmpassword) {
     //   return res
     //     .status(200)
@@ -60,21 +60,21 @@ exports.signUpRoute = async (req, res, next) => {
       return false;
     }
 
-    if (!regularExpression.test(confirmpassword)) {
-      res.status(200).json({
-        status: false,
-        message:
-          "plz fill valid confirmpassword  */ fill one lowercase,one uppercase, one digit,valid 6 to 16",
-      });
-      return false;
-    }
+    // if (!regularExpression.test(confirmpassword)) {
+    //   res.status(200).json({
+    //     status: false,
+    //     message:
+    //       "plz fill valid confirmpassword  */ fill one lowercase,one uppercase, one digit,valid 6 to 16",
+    //   });
+    //   return false;
+    // }
     if (password !== confirmpassword) {
       return res
         .status(200)
         .json({ status: false, message: "Password could not be matched" });
     }
 
-    console.log("---------=-=", req.body);
+    // console.log("---------=-=", req.body);
     // const data = await User.findOne({ where: { email: email } });
 
     // if (data) {
@@ -88,11 +88,11 @@ exports.signUpRoute = async (req, res, next) => {
     // console.log("---------------=-the data", data);
 
     const bcryptPass = await bcrypt.hash(password, 12);
-    console.log("------------password", password);
     const result = await User.create({
       email: email,
       password: bcryptPass,
       username: username,
+      role:role
     });
     const token = jwtTokenHandler(result.id);
 
@@ -115,6 +115,7 @@ exports.signUpRoute = async (req, res, next) => {
     });
   }
 };
+
 
 exports.signin = async (req, res) => {
   const { email, password } = req.body;

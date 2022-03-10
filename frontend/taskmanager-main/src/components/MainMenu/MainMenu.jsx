@@ -10,7 +10,6 @@ function MainMenu({ setisLoggedIN }) {
   const dispatch = useDispatch();
 
   const userExist = useSelector((state) => state.user);
-  console.log("-=-=-userExist", userExist);
 
   const logoutHandler = () => {
     localStorage.removeItem("token");
@@ -54,9 +53,7 @@ function MainMenu({ setisLoggedIN }) {
           <Link className="nav-link" to="/completedtask">
             <li className="nav-item">CompletedTask</li>
           </Link>
-          <Link className="nav-link" to="/pendingtask">
-            <li className="nav-item">PendingTask</li>
-          </Link>
+          
         </ul>
       </div>
       <Link className="nav-link" to="/login">
