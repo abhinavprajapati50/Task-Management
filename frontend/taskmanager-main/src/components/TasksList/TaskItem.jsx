@@ -9,26 +9,32 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 // import "./Taskcss/Task_Item.css";
 import "./Taskcss/Task_Item.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { joinTeamTaSk, taskApi } from "../Api/api";
 import axios from "axios";
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
+import { Link } from "react-router-dom";
+// import { TaskUpdateForm } from "../TaskForm/TaskUpdateForm";
+import { taskUpdateSuccess } from "../../New_Redux/Actions";
 
-function TaskItem({  setisLoggedIN, setloader }) {
+function TaskItem({ setisLoggedIN, setloader }) {
   const Loader = useSelector((state) => state.user.loading);
   const [allTaskData, setallTaskData] = useState([]);
   const [completedTaskState, setcompletedTaskState] = useState(null);
   const [deletedTaskState, setDeletedTaskState] = useState(null);
   const [assignTaskName, setassignTaskName] = useState([]);
   let [nameId, setnameId] = useState();
+  const [updateData, setupdateData] = useState("");
   const navgate = useNavigate();
   const paramas = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   setisLoggedIN(true);
   const allTaskFuncHandler = async () => {
     const allTask = await axios.get(taskApi);
     setallTaskData(allTask.data.data);
-
   };
 
   const handleDateDDMMYYFormat = (date) => {
@@ -36,18 +42,17 @@ function TaskItem({  setisLoggedIN, setloader }) {
     return theDate.toLocaleDateString();
   };
 
-  const assignTaskNameFunc = async  (id) => {
+  const assignTaskNameFunc = async (id) => {
     try {
       console.log(id);
-      let assignedName = await axios.get(`http://localhost:5000/team/${id}`)
+      let assignedName = await axios.get(`http://localhost:5000/team/${id}`);
       // let taskName = assignedName.data.data.name;
-      setassignTaskName(assignedName.data.data.name)
+      setassignTaskName(assignedName.data.data.name);
       // return taskName
     } catch (error) {
       console.log("ERROR: " + error.message || error);
     }
-    
-  }
+  };
 
   const handleCompletedTask = async (taskId) => {
     console.log(taskId);
@@ -82,6 +87,22 @@ function TaskItem({  setisLoggedIN, setloader }) {
     }
   };
 
+  const editHandler = (data) => {
+    console.log("data", data);
+    if (data ==   undefined) {
+      return navigate("/");
+    }
+    console.log(dispatch(taskUpdateSuccess(data)));
+    dispatch(taskUpdateSuccess(data));
+    // return <TaskUpdateForm data={data} />
+
+    // settask()
+    // setdescription()
+    //  setdueDate()
+    //   setAssign_to()
+    //    setstatus()
+  };
+
   //   try {
   //     let result = await axios.put(
   //   `http://localhost:5000/admin/appontment/aprooved/${data.id}`
@@ -94,11 +115,12 @@ function TaskItem({  setisLoggedIN, setloader }) {
   // }
 
   useEffect(async () => {
-    setloader(false)
+    setloader(false);
     allTaskFuncHandler();
-    assignTaskNameFunc()
+    assignTaskNameFunc();
     const allTask = await axios.get(taskApi);
     setallTaskData(allTask.data.data);
+    editHandler();
   }, [completedTaskState]);
   return (
     <div className="cardStyle">
@@ -110,7 +132,7 @@ function TaskItem({  setisLoggedIN, setloader }) {
             <div className="row col d-flex justify-content-center">
               {allTaskData.map(
                 (taskInfo) =>
-                  taskInfo.status ==0 &&
+                  taskInfo.status == 0 &&
                   taskInfo.chr_delete == 0 && (
                     <div className="card_padding" key={taskInfo.id}>
                       <Card
@@ -146,12 +168,26 @@ function TaskItem({  setisLoggedIN, setloader }) {
                           </Button>
                           {/* )} */}
                           <Button
+                            className="mr-2"
                             variant="contained"
                             color="warning"
                             onClick={() => handleDeletedTask(taskInfo.id)}
                           >
                             Delete
                           </Button>
+                          <Link to={`/edit/${taskInfo.id}`}>
+                            <Button variant="contained" >
+                              Edit
+                              <EditIcon
+                                style={{
+                                  color: "blue",
+                                  marginRight: "20px",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => editHandler(taskInfo)}
+                              />
+                            </Button>
+                          </Link>
                         </CardActions>
                       </Card>
                     </div>

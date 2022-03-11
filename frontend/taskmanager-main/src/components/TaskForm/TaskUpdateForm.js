@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import DatePicker from "@mui/lab/DatePicker";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import TextField from "@mui/material/TextField";
 import { Stack } from "@mui/material";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
@@ -13,62 +11,75 @@ import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 // import useHistory from "react-router";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import "./Task_Form.css";
 import axios from "axios";
 import { taskApi } from "../Api/api";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
-function TaskForm() {
-  const [dead_line, setdead_line] = useState(new Date());
-  const [Assign_to, setAssign_to] = useState(null);
-  const [task, setTask] = useState("");
-  const [Alltask, setAlltask] = useState([]);
-  const [description, setDescription] = useState("");
+export const TaskUpdateForm = () => {
+  const { pathname } = useLocation();
+  const singleTask = useSelector((state) => state.user.currentUser);
+
+  console.log("singleTask", singleTask);
+
+  const [dead_line, setdead_line] = useState(singleTask.dueDate);
+  const [Assign_to, setAssign_to] = useState(singleTask.Assign_to);
+  const [task, setTask] = useState(singleTask.task);
+  const [description, setDescription] = useState(singleTask.description);
   const [teamData, setteamData] = useState([]);
-  const [error, seterror] = useState("");
+  const [taskData, setTaskData] = useState([]);
+  const [updatedData, setupdatedData] = useState(false);
+  const [taskSingleData, settaskSingleData] = useState(null);
   const navigate = useNavigate();
+  const params = useParams();
 
-  // let history = useHistory();
+  const userId = pathname.replace("/edit-user/", "");
 
   const handleChange = (event) => {
     setAssign_to(event.target.value);
   };
 
   const handleDate = (newValue) => {
-    console.log("0-0-0-0-0",newValue.toDateString());
+    console.log("0-0-0-0-0", newValue.toDateString());
     setdead_line(newValue.toDateString());
   };
-  const
-    handleAllTeam = async () => {
+  const handleAllTeam = async () => {
     const teamData = await axios.get("http://localhost:5000/team");
     setteamData(teamData.data.data);
   };
-
   const handleAllTask = async () => {
     const taskData = await axios.get("http://localhost:5000/task");
     // console.log(taskData.data.data);
-    setAlltask(taskData.data.data);
+    setTaskData(taskData.data.data);
   };
-
-  const hnadleSubmit = async (e) => {
+  const updateHandler = async (e) => {
     e.preventDefault();
     try {
-      const resultTask = await axios.post(taskApi, {
-        task,
-        description,
-        dueDate: dead_line,
-        Assign_to,
-      });
-      seterror(resultTask.data.message);
-      resultTask.data.data
-        ? toast.success(resultTask.data.message) && navigate("/") && clearData()
-        : toast.error(resultTask.data.message);
-      console.log("-=-=-=-=-=-=resultTask", resultTask);
-      
-      
+      const updateTask = await axios.put(
+        `http://localhost:5000/task/edit/${taskSingleData.id}`,
+        {
+          task,
+          description,
+          dueDate: dead_line,
+          Assign_to,
+        }
+      );
+
+      if (updateTask) {
+        toast.success("Updatede successfully");
+      }
+      setupdatedData(updateTask);
+      navigate("/");
+      console.log(updateTask);
+      // seterror(resultTask.data.message);
+      // resultTask.data.data
+      //   ? toast.success(resultTask.data.message) && navigate("/") && clearData()
+      //   : toast.error(resultTask.data.message);
+      // console.log("-=-=-=-=-=-=resultTask", resultTask);
     } catch (error) {
-      console.log(error.message || error); ;
+      console.log(error.message || error);
     }
   };
 
@@ -78,18 +89,32 @@ function TaskForm() {
     setTask("");
     setDescription("");
   };
-  useEffect(() => {
-    handleAllTeam();
-    handleAllTask()
-  }, [task]);
 
-  // console.log(
-  // dead_line,
-  //   Assign_to,
-  //   task,
-  //   description
+  // const selectorNullHandler = () => {
+  //   console.log(params.id);
+  //   console.log(
+  //     "--------------=-=-=-=-=-=--",
+  //     taskData.map((curData) => curData.id)
   //   );
+  //   if (singleTask == null) {
+  //   }
+  // };
+  // console.log(taskData.map(curData => curData))
 
+  // console.log(taskSingleData);
+
+  useEffect(() => {
+    // const nullData = singleTask==null
+    // nullData &&
+    console.log(singleTask === null);
+    if (!singleTask === null) {
+      return navigate("/");
+    } else {
+      handleAllTask();
+      settaskSingleData(singleTask);
+      handleAllTeam();
+    }
+  }, [task, updatedData]);
   return (
     <div>
       <div className="card_Body">
@@ -99,7 +124,7 @@ function TaskForm() {
           <form
             action="/"
             // method="post"
-            onSubmit={hnadleSubmit}
+            onSubmit={updateHandler}
           >
             <div className="form-group">
               <label for="title">Task</label>
@@ -132,7 +157,7 @@ function TaskForm() {
                   <DesktopDatePicker
                     label="Date"
                     inputFormat="MM/dd/yyyy"
-                    minDate={dead_line}
+                    minDate={new Date()}
                     value={dead_line}
                     onChange={handleDate}
                     renderInput={(params) => <TextField {...params} />}
@@ -172,6 +197,4 @@ function TaskForm() {
       </div>
     </div>
   );
-}
-
-export default TaskForm;
+};

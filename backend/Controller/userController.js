@@ -14,7 +14,8 @@ exports.signUpRoute = async (req, res, next) => {
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   
   const regularExpression =
-  /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+    /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+    console.log("------------------------0-0-0-0-0-", role);
   console.log("------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>", req.body);
   try { 
 
@@ -96,7 +97,7 @@ exports.signUpRoute = async (req, res, next) => {
     });
     const token = jwtTokenHandler(result.id);
 
-    console.log("--------------=-token", result);
+    console.log("--------------=->>>>>>>>>>>>>>>>>>token", result);
     // console.log("--------------=-req.headers", req.headers);
 
     if (result) {
@@ -118,8 +119,8 @@ exports.signUpRoute = async (req, res, next) => {
 
 
 exports.signin = async (req, res) => {
-  const { email, password } = req.body;
-
+  const { email, password, role } = req.body;
+console.log("------------------------0-0-0-0-0-", role);
   if (!email || !password) {
     return res
       .status(500)

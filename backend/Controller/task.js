@@ -4,7 +4,7 @@ const teamModal = require("../Model/TeamModal");
 exports.task = async (req, res, next) => {
   const { task, description, dueDate, Assign_to, status, chr_delete } =
     req.body;
-  if (!task || !description || !dueDate ) {
+  if (!task || !description || !dueDate) {
     return res
       .status(200)
       .json({ status: false, message: "All field required" });
@@ -64,16 +64,14 @@ exports.task = async (req, res, next) => {
     res.status(500).json({
       status: false,
       message: "Task is not Created",
-      data:  error.message,
+      data: error.message,
     });
   }
 };
 exports.AllTask = async (req, res, next) => {
   try {
     const result_Task = await taskModal.findAll({
-      order: [
-        ['id', 'DESC'],
-      ],
+      order: [["id", "DESC"]],
       include: teamModal,
       // //   attributes:['id' ]
       // where: { id: req.body.id },
@@ -95,6 +93,38 @@ exports.AllTask = async (req, res, next) => {
   }
 };
 
+// updateTask
+
+exports.updateTask = async (req, res) => {
+  console.log("-------------=-=-=>>>>>>>>>>", req.body);
+  const { task, description, dueDate, Assign_to, status } =
+    req.body;
+
+  // let id = req.params.id;
+  console.log("page LENGTH++++++", req.body);
+
+  try {
+    const updatedTask = await taskModal.update(
+      { task, description, dueDate, Assign_to, status },
+      {
+        where: {
+          id: req.params.id,
+        },
+      }
+    );
+    console.log(updatedTask);
+    res.status(200).json({
+      status: true,
+      message: " task successfully updated",
+      data:  updatedTask ,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: false, message: " Error in delete api", data: error.message || error });
+  }
+};
+
 // completedTask
 
 exports.completedTask = async (req, res, next) => {
@@ -105,7 +135,7 @@ exports.completedTask = async (req, res, next) => {
     const comhpletedTask = await taskModal.update(
       { status: 1 },
       // { status: "1" },
-      { where: { id: id }}
+      { where: { id: id } }
     );
     res.status(200).json({
       status: true,
@@ -127,7 +157,7 @@ exports.deletedTask = async (req, res) => {
     let id = req.params.id;
 
     const deletedTask = await taskModal.update(
-    {
+      {
         chr_delete: "1",
       },
       { where: { id: id } }

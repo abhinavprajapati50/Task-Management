@@ -22,6 +22,7 @@ import { ForgotPassword } from "./components/Login/ForgotPassword";
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
 import { Loader } from "./components/Loader";
+import { TaskUpdateForm } from "./components/TaskForm/TaskUpdateForm";
 
 function App() {
   const [isLoggedIN, setisLoggedIN] = useState(
@@ -29,7 +30,7 @@ function App() {
   );
   const [loader, setloader] = useState(false);
   const authuser = useSelector((state) => state.user);
-  console.log(authuser.loading);
+  console.log(authuser);
   console.log(loader);
 
   // console.log("-------------=--=-isLoggedIN", authuser);
@@ -69,8 +70,8 @@ function App() {
                 />
                 <Route path="/task/:id" element={<TaskDetails />} />
                 <Route path="/newtask" element={<TaskForm />} />
+                <Route path="/edit/:id" element={<TaskUpdateForm />} />
                 <Route path="/completedtask" element={<CompletedTask />} />
-
                 <Route path="/team" element={<Team />} />
                 <Route path="/team/:id" element={<TeamDetails />} />
                 <Route path="/dashboard" element={<Dashboard />} />

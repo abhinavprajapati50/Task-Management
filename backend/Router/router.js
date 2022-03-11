@@ -20,7 +20,7 @@
 // } = require("../Controller/adminServices");
 const upload = require("../imageuploader");
 const { signUpRoute, signin } = require("../Controller/userController");
-const { task, AllTask, completedTask, RejectedTask, deletedTask } = require("../Controller/task");
+const { task, AllTask, completedTask, RejectedTask, deletedTask, updateTask } = require("../Controller/task");
 const { team, Allteam, singleTeamUser,  } = require("../Controller/Team");
 const authExisting = require("../Middleware/authUser");
 const { joinTeamTask, scopes, completedTaskApi } = require("../JOIN TABLE/join");
@@ -38,6 +38,7 @@ router.post("/signin", signin);
 // ---------TASK
 router.post("/task", task);
 router.get("/task", AllTask);
+router.put("/task/edit/:id", updateTask);
 router.put("/task/completed/:id", completedTask);
 router.put("/task/deletedtask/:id", deletedTask);
 

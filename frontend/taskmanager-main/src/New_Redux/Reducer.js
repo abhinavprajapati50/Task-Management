@@ -7,6 +7,8 @@ import types, {
   REGISTER_FAIL,
   REGISTER_START,
   REGISTER_SUCCESS,
+  UpdateTask_FAIL,
+  UpdateTask_SUCCESS,
 } from "./ActionTypes";
 const initialState = {
   loading: false,
@@ -30,7 +32,8 @@ export const userReducer = (state = initialState, action) => {
       };
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
-      case LOGIN_FAIL:
+    case UpdateTask_SUCCESS:
+    case LOGIN_FAIL:
       return {
         ...state,
         loading: false,
@@ -39,6 +42,7 @@ export const userReducer = (state = initialState, action) => {
 
     case REGISTER_FAIL:
     case LOGIN_FAIL:
+    case UpdateTask_FAIL:
       return {
         ...state,
         loading: false,
