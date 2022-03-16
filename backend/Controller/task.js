@@ -97,8 +97,7 @@ exports.AllTask = async (req, res, next) => {
 
 exports.updateTask = async (req, res) => {
   console.log("-------------=-=-=>>>>>>>>>>", req.body);
-  const { task, description, dueDate, Assign_to, status } =
-    req.body;
+  const { task, description, dueDate, Assign_to, status } = req.body;
 
   // let id = req.params.id;
   console.log("page LENGTH++++++", req.body);
@@ -110,18 +109,48 @@ exports.updateTask = async (req, res) => {
         where: {
           id: req.params.id,
         },
+
       }
     );
     console.log(updatedTask);
     res.status(200).json({
       status: true,
       message: " task successfully updated",
-      data:  updatedTask ,
+      data: {updatedTask,task},
     });
   } catch (error) {
     res
       .status(500)
-      .json({ status: false, message: " Error in delete api", data: error.message || error });
+      .json({
+        status: false,
+        message: " Error in delete api",
+        data: error.message || error,
+      });
+  }
+};
+exports.getUpdatedTask = async (req, res) => {
+  // let id = req.params.id;
+
+  try {
+    const updatedTask = await taskModal.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+    console.log(updatedTask);
+    res.status(200).json({
+      status: true,
+      message: "Get task successfully updated",
+      data: updatedTask,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        status: false,
+        message: " Error in update api",
+        data: error.message || error,
+      });
   }
 };
 

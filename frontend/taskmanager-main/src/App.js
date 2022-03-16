@@ -29,8 +29,6 @@ function App() {
     localStorage.getItem("token") ? true : false
   );
   const [loader, setloader] = useState(false);
-  const authuser = useSelector((state) => state.user);
-  console.log(authuser);
   console.log(loader);
 
   // console.log("-------------=--=-isLoggedIN", authuser);

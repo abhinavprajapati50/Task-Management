@@ -36,11 +36,10 @@ function TaskForm() {
   };
 
   const handleDate = (newValue) => {
-    console.log("0-0-0-0-0",newValue.toDateString());
+    console.log("0-0-0-0-0", newValue.toDateString());
     setdead_line(newValue.toDateString());
   };
-  const
-    handleAllTeam = async () => {
+  const handleAllTeam = async () => {
     const teamData = await axios.get("http://localhost:5000/team");
     setteamData(teamData.data.data);
   };
@@ -65,10 +64,8 @@ function TaskForm() {
         ? toast.success(resultTask.data.message) && navigate("/") && clearData()
         : toast.error(resultTask.data.message);
       console.log("-=-=-=-=-=-=resultTask", resultTask);
-      
-      
     } catch (error) {
-      console.log(error.message || error); ;
+      console.log(error.message || error);
     }
   };
 
@@ -80,7 +77,7 @@ function TaskForm() {
   };
   useEffect(() => {
     handleAllTeam();
-    handleAllTask()
+    handleAllTask();
   }, [task]);
 
   // console.log(
@@ -93,81 +90,83 @@ function TaskForm() {
   return (
     <div>
       <div className="card_Body">
-        <div className="container col-sm-8 " className="addtaskform">
-          <h4 className="mb-4">Add Task</h4>
-          <div className="error"></div>
-          <form
-            action="/"
-            // method="post"
-            onSubmit={hnadleSubmit}
-          >
-            <div className="form-group">
-              <label for="title">Task</label>
-              <input
-                type="text"
-                className="form-control"
-                id="task"
-                aria-describedby="emailHelp"
-                value={task}
-                onChange={(e) => setTask(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label for="description">Description</label>
-              <textarea
-                rows="4"
-                type="text"
-                className="form-control"
-                id="description"
-                aria-describedby="emailHelp"
-                onChange={(e) => setDescription(e.target.value)}
-                value={description}
-              />
-            </div>
-            <div className="form-group">
-              <label for="dueDate">Due Date</label>
+        <div className="container col-sm-12">
+          <div className="addtaskform">
+            <h4 className="mb-4">Add Task</h4>
+            <div className="error"></div>
+            <form
+              action="/"
+              // method="post"
+              onSubmit={hnadleSubmit}
+            >
+              <div className="form-group">
+                <label for="title">Task</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="task"
+                  aria-describedby="emailHelp"
+                  value={task}
+                  onChange={(e) => setTask(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label for="description">Description</label>
+                <textarea
+                  rows="4"
+                  type="text"
+                  className="form-control"
+                  id="description"
+                  aria-describedby="emailHelp"
+                  onChange={(e) => setDescription(e.target.value)}
+                  value={description}
+                />
+              </div>
+              <div className="form-group">
+                <label for="dueDate">Due Date</label>
 
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Stack spacing={3}>
-                  <DesktopDatePicker
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <Stack spacing={3}>
+                    <DesktopDatePicker
+                      label="Date"
+                      inputFormat="MM/dd/yyyy"
+                      minDate={dead_line}
+                      value={dead_line}
+                      onChange={handleDate}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </Stack>
+                </LocalizationProvider>
+              </div>
+              <div>
+                <FormControl sx={{ minWidth: 270 }}>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
                     label="Date"
-                    inputFormat="MM/dd/yyyy"
-                    minDate={dead_line}
-                    value={dead_line}
-                    onChange={handleDate}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </Stack>
-              </LocalizationProvider>
-            </div>
-            <div>
-              <FormControl sx={{ m: 1, minWidth: 410 }}>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Date"
-                  value={Assign_to}
-                  onChange={handleChange}
-                  // displayEmpty
-                  defaultValue={null}
-                  // inputProps={{ "aria-label": "Without label" }}
-                >
-                  <MenuItem value={null}>
-                    <em>None</em>
-                  </MenuItem>
+                    value={Assign_to}
+                    onChange={handleChange}
+                    // displayEmpty
+                    defaultValue={null}
+                    // inputProps={{ "aria-label": "Without label" }}
+                  >
+                    <MenuItem value={null}>
+                      <em>None</em>
+                    </MenuItem>
 
-                  {teamData.map((allTeam) => (
-                    <MenuItem value={allTeam.id}>{allTeam.name}</MenuItem>
-                  ))}
-                </Select>
-                <FormHelperText>Assign to</FormHelperText>
-              </FormControl>
-            </div>
+                    {teamData.map((allTeam) => (
+                      <MenuItem value={allTeam.id}>{allTeam.name}</MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>Assign to</FormHelperText>
+                </FormControl>
+              </div>
 
-            <Button type="submit" variant="contained">
-              Submit
-            </Button>
-          </form>
+              <Button type="submit" variant="contained">
+                Submit
+              </Button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

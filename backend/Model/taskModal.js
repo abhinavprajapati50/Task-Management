@@ -14,7 +14,6 @@ const taskModal = sequelizeDb.define("task", {
   },
   Assign_to: {
     type: Sequelize.INTEGER,
-    
     defaultValue: null
   },
   status: {

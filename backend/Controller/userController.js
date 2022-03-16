@@ -9,16 +9,18 @@ const jwtTokenHandler = (id) => {
 };
 
 exports.signUpRoute = async (req, res, next) => {
-  const { email, password, username, confirmpassword,role } = req.body;
+  const { email, password, username, role } = req.body;
   const emailRegexp =
-  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
   const regularExpression =
     /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-    console.log("------------------------0-0-0-0-0-", role);
-  console.log("------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>", req.body);
-  try { 
-
+  console.log("------------------------0-0-0-0-0-", role);
+  console.log(
+    "------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>",
+    req.body
+  );
+  try {
     // if (!username || !password || !email || !confirmpassword) {
     //   return res
     //     .status(200)
@@ -40,18 +42,17 @@ exports.signUpRoute = async (req, res, next) => {
         .status(200)
         .json({ status: false, message: "Plz fill the password" });
     }
-    if (!confirmpassword) {
-      return res.status(200).json({
-        status: false,
-        message: "Plz fill the confirmpassword",
-      });
-    }
+    // if (!confirmpassword) {
+    //   return res.status(200).json({
+    //     status: false,
+    //     message: "Plz fill the confirmpassword",
+    //   });
+    // }
 
     if (!emailRegexp.test(email)) {
       res.status(200).json({ status: false, message: "Email is not valid" });
       return false;
     }
-
     if (!regularExpression.test(password)) {
       res.status(200).json({
         status: false,
@@ -61,30 +62,16 @@ exports.signUpRoute = async (req, res, next) => {
       return false;
     }
 
-    // if (!regularExpression.test(confirmpassword)) {
-    //   res.status(200).json({
-    //     status: false,
-    //     message:
-    //       "plz fill valid confirmpassword  */ fill one lowercase,one uppercase, one digit,valid 6 to 16",
-    //   });
-    //   return false;
-    // }
-    if (password !== confirmpassword) {
-      return res
-        .status(200)
-        .json({ status: false, message: "Password could not be matched" });
-    }
-
     // console.log("---------=-=", req.body);
-    // const data = await User.findOne({ where: { email: email } });
+    const data = await User.findOne({ where: { email: email } });
 
-    // if (data) {
-    //   return res.status(200).json({
-    //     status: false,
-    //     message:
-    //       "This email is already is exist !!! Please use different email!!",
-    //   });
-    // }
+    if (data) {
+      return res.status(200).json({
+        status: false,
+        message:
+          "This email is already is exist !!! Please use different email!!",
+      });
+    }
 
     // console.log("---------------=-the data", data);
 
@@ -93,7 +80,7 @@ exports.signUpRoute = async (req, res, next) => {
       email: email,
       password: bcryptPass,
       username: username,
-      role:role
+      role: role,
     });
     const token = jwtTokenHandler(result.id);
 
@@ -104,7 +91,7 @@ exports.signUpRoute = async (req, res, next) => {
       return res.status(200).json({
         status: true,
         message: "user is successfull register",
-        data: result,
+        data: { username: result.username, email: result.email },
         token,
       });
     }
@@ -117,10 +104,9 @@ exports.signUpRoute = async (req, res, next) => {
   }
 };
 
-
 exports.signin = async (req, res) => {
   const { email, password, role } = req.body;
-console.log("------------------------0-0-0-0-0-", role);
+  console.log("------------------------0-0-0-0-0-", role);
   if (!email || !password) {
     return res
       .status(500)
@@ -192,7 +178,11 @@ console.log("------------------------0-0-0-0-0-", role);
         return res.status(200).json({
           status: true,
           message: "Login successfully",
-          data: alreadyExists.username,
+          data: {
+            username: alreadyExists.username,
+            email: alreadyExists.email,
+          },
+          // data: alreadyExists.username,
           token,
         });
       } else {

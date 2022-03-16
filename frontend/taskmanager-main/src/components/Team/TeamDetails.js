@@ -15,16 +15,16 @@ import { teamApi } from "../Api/api";
 export const TeamDetails = () => {
   const paramas = useParams();
   const navigate = useNavigate();
-    const [allUser, setallUser] = useState([])
+  const [allUser, setallUser] = useState([]);
 
   const getAllUser = async () => {
-    const allTeams = await axios.get(teamApi)
-    setallUser(allTeams.data.data)
-  }
-  useEffect( async () => {
-      getAllUser()
-  }, [])
-  
+    const allTeams = await axios.get(teamApi);
+    setallUser(allTeams.data.data);
+  };
+  useEffect(async () => {
+    getAllUser();
+  }, []);
+
   // console.log(paramas.id);
 
   return (
@@ -34,7 +34,7 @@ export const TeamDetails = () => {
       </div>
       <div className="row col d-flex justify-content-center">
         {allUser.map((team) =>
-          team.id == paramas.id  ? (
+          team.id == paramas.id ? (
             <Card
               sx={{ width: 445, height: 345 }}
               style={{ paddingTop: "2rem", marginTop: "10%" }}

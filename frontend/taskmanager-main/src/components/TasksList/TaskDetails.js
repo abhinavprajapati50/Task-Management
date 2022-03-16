@@ -16,7 +16,7 @@ export const TaskDetails = () => {
   const [allTasks, setallTasks] = useState([]);
   const [allTeamsMembers, setallTeamsMembers] = useState([]);
   const [allT, setallT] = useState([]);
-  const [assignTaskName, setassignTaskName] = useState('');
+  const [assignTaskName, setassignTaskName] = useState("");
   const [subTasks, setsubTasks] = useState([]);
   const [teamName, setteamName] = useState("");
   const paramas = useParams();
@@ -43,68 +43,71 @@ export const TaskDetails = () => {
   };
 
   const assignTaskNameFunc = async () => {
-    const assignedName = await axios.get(`http://localhost:5000/team/${paramas.id}`)
-    setassignTaskName(assignedName.data.data.name)
+    const assignedName = await axios.get(
+      `http://localhost:5000/team/${paramas.id}`
+    );
+    setassignTaskName(assignedName.data.data.name);
+    setteamName();
+
     console.log("<<<<------------", assignedName.data.data.name);
-    
-  }
+  };
 
   const handleDateDDMMYYFormat = (date) => {
     let theDate = new Date(Date.parse(date));
     return theDate.toLocaleDateString();
   };
 
-  // const assignNameHandler = (nameId) => {
-  //   // console.log("--------------->>", nameId, allTeamsMembers);
-  //   let dataName = allTeamsMembers.find((cur) => cur.id == nameId);
-  //   setteamName(dataName.name);
-  //   return dataName.name;
-  // };
-
   useEffect(() => {
     getAllUser();
     getAllTeamMembers();
-    assignTaskNameFunc()
-  }, [teamName]);
+    assignTaskNameFunc();
+  }, [assignTaskName]);
   console.log(assignTaskName);
   return (
     <>
+      {console.log("Hello From My side")}
       <div className="card_body">
         <div className="arrow_back">
           <ArrowBackIcon onClick={() => navigate(-1)} />
         </div>
         <div className="row col d-flex justify-content-center">
-          {subTasks.map((currentTask) => (
-            <div className="padding_card">
-              <Card
-                sx={{ width: 345, height: 200, padding: 1 }}
-                className="card"
-              >
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {currentTask.task}
-                  </Typography>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {handleDateDDMMYYFormat(currentTask.dueDate)}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {currentTask.description}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    assign to - <strong>{assignTaskName} </strong>
-                  </Typography>
-                </CardContent>
-                {/* <CardActions>
+          {subTasks.length > 0 ? (
+            subTasks.map((currentTask) => (
+              <>
+                <div className="padding_card">
+                  <Card
+                    sx={{ width: 345, height: 200, padding: 1 }}
+                    className="card"
+                  >
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {currentTask.task}
+                      </Typography>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {handleDateDDMMYYFormat(currentTask.dueDate)}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {currentTask.description}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        assign to - <strong>{assignTaskName} </strong>
+                      </Typography>
+                    </CardContent>
+                    {/* <CardActions>
                   <Button variant="contained" color="success">
                     Complete
-                  </Button>
-                  <Button variant="contained" color="warning">
+                    </Button>
+                    <Button variant="contained" color="warning">
                     Delete
-                  </Button>
-                </CardActions> */}
-              </Card>
-            </div>
-          ))}
+                    </Button>
+                  </CardActions> */}
+                  </Card>
+                </div>
+              </>
+            ))
+          ) : (
+            <h1>No Task Found !!...</h1>
+          )}
         </div>
         {/* </div> */}
       </div>

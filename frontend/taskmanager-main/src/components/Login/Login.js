@@ -6,22 +6,17 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 // import { useNavigate } from "react-router-dom";
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  loginFail,
-  loginStart,
-  loginSuccess,
-  registerFail,
-  registerStart,
-  registerSuccess,
-} from "../../New_Redux/Actions";
+
+import { LoginAction } from "../../New_Redux/Actions/LoginAction";
+import { RegisterActions } from "../../New_Redux/Actions/RegisterActions";
 
 export const Login = ({ setisLoggedIN }) => {
   const [email, setEmail] = useState("");
@@ -66,89 +61,81 @@ export const Login = ({ setisLoggedIN }) => {
   }, []);
 
   const signUpHandler = async (event) => {
+    // debugger
     event.preventDefault();
-    dispatch(registerStart());
     setusernameError(true);
     setregisterEmailError(true);
     setregisterPassError(true);
     setregisterConfirmPassError(true);
+    // debugger
     // validation();
-    try {
-      const result = await axios.post("http://localhost:5000/signup", {
-        username: username,
-        email: email,
-        password: password,
-        role:role,
-        confirmpassword: registerConfirmPassword,
-      });
-      console.log(result);
-      dispatch(registerSuccess(result.data));
-
-      if (result.data.status == false) {
-        // setRegerror(result.data.message);
-        toast.error(result.data.message);
-        console.log(result);
-      } else {
-        localStorage.setItem("token", result.data.token, {
-          username: result.data.username,
-        });
-        // dispatch(authsUserAction.loggedInUser());
-        setisLoggedIN(true);
-        clearData();
-        navigate("/dashboard", { return: true });
-      }
-
-      console.log(result.data.message);
-
-      // navigate("admin", { return: true });
-    } catch (error) {
-      // setEmailError(true);
-      dispatch(registerFail(error));
-      console.log(error.message);
-      toast.error(error.message);
-      // return toast.error("Invalid Credentials");
-
-      // console.log(error);
+    const signUpUser = {
+      username: username,
+      email: email,
+      password: password,
+      role: role,
+      confirmpassword: registerConfirmPassword,
+    };
+    if (!username) {
+      return toast.error("Please enter a username !!");
     }
+    if (!email) {
+      return toast.error("Please enter a email !!");
+    }
+    if (!password) {
+      return toast.error("Please enter a password !!");
+    }
+    if (!registerConfirmPassword) {
+      return toast.error("Please enter a confirm-password !!");
+    }
+
+    if (password !== registerConfirmPassword) {
+      toast.error("Password Could Not Be Match");
+      return;
+    }
+    console.log("---------------->", signUpUser);
+    const registeredUser = await dispatch(RegisterActions(signUpUser));
+    console.log(registeredUser);
+    // isRegistered
+    if (registeredUser.isRegistered == false) {
+      toast.error(registeredUser.payload);
+      return;
+    }
+
+    // if (registeredUser.isRegistered == false) {
+    //   return toast.error(registeredUser.payload);
+    // }
+    setisLoggedIN(true);
+    clearData();
+    toast.success(`Welcome to ${registeredUser.payload.username} `);
+    navigate("/dashboard", { return: true });
+
+    // navigate("admin", { return: true });
   };
   const loggedInHandler = async (event) => {
     event.preventDefault();
-
     setEmailError(true);
     setPassError(true);
-    dispatch(loginStart());
 
     // validation();
-    try {
-      const result = await axios.post("http://localhost:5000/signin", {
-        email: email,
-        password: password,
-      });
-      // dispatch(login({result: result.data, loggedIn: true}) )
-      // dispatch(userActions.login());
-      // console.log("result", result);
-      if (result.data.status == false) {
-        toast.error(result.data.message);
-      } else {
-        localStorage.setItem("token", result.data.token);
-        dispatch(loginSuccess(result.data));
-        // dispatch(authsUserAction.loggedInUser());
-        setisLoggedIN(true);
-        console.log(result.data.message);
-        clearData();
-        toast.success(`Welcome ${result.data.data} `);
-        // toast.success(result.data.message);
-        navigate("/dashboard", { return: true });
-      }
-    } catch (error) {
-      dispatch(loginFail());
+    const loginCredentials = {
+      email,
+      password,
+    };
+    const loggedInData = await dispatch(LoginAction(loginCredentials));
 
-      // setEmailError(true);
-      return error.message || error;
-      // return toast.error("Invalid Credentials");
+    console.log(loggedInData);
 
-      // console.log(error);
+    if (loggedInData.isLoggedIn == false) {
+      toast.error(loggedInData.payload);
+      return;
     }
+    setisLoggedIN(true);
+
+    clearData();
+    toast.success(`Welcome ${loggedInData.payload.username} `);
+    // toast.success(result.data.message);
+    navigate("/dashboard", { return: true });
   };
 
   const clearData = () => {
@@ -162,7 +149,6 @@ export const Login = ({ setisLoggedIN }) => {
     setEmailError(false);
     setPassError(false);
   };
-  console.log("0-0-------------------role", role);
   return (
     <div>
       {/* Login */}
@@ -287,21 +273,22 @@ export const Login = ({ setisLoggedIN }) => {
                       Plz enter your Confirm Password.
                     </small>
                   )}
-                      <Box sx={{ minWidth: 120 }}>
-
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Select Role</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={role}
-                      label="Role"
-                      onChange={handleChange}
-                    >
-                      <MenuItem value={1}>Project Manager</MenuItem>
-                      <MenuItem value={2}>Employee</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <Box sx={{ minWidth: 120 }}>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Select Role
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={role}
+                        label="Role"
+                        onChange={handleChange}
+                      >
+                        <MenuItem value={1}>Project Manager</MenuItem>
+                        <MenuItem value={2}>Employee</MenuItem>
+                      </Select>
+                    </FormControl>
                   </Box>
                   <div>
                     <input type="submit" name="" value="Sign Up" />

@@ -1,27 +1,27 @@
-// import { applyMiddleware, createStore } from "redux";
-// import thunk from "redux-thunk";
-// import logger from "redux-logger";
 
 //
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, combineReducers } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { rootReduser } from "./RootReducers";
+import { loginReducer } from "./Reducers/LoginReducers";
+import { registerReducer } from "./Reducers/RegisterReducers";
+import { updateReducer } from "./Reducers/UpdateReducers";
 
 const persistConfig = {
   key: "root",
   storage,
 };
-// const middlware = [thunk];
 
-// if (process.env.NODE_ENV !== "development") {
-//   middlware.push(logger);
-// }
+const rootReducer = combineReducers({
+  userLogin: loginReducer,
+  userRegister: registerReducer,
+  taskUpdateReducer: updateReducer
+});
 
 const middleware = [thunk];
-const persistedReducer = persistReducer(persistConfig, rootReduser);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 let store = createStore(
   persistedReducer,
   composeWithDevTools(applyMiddleware(...middleware))
@@ -29,5 +29,3 @@ let store = createStore(
 let persistor = persistStore(store);
 
 export { store, persistor };
-
-// export const store = createStore(rootReduser, applyMiddleware(...middlware));
