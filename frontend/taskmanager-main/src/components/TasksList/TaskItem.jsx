@@ -10,12 +10,15 @@ import Typography from "@mui/material/Typography";
 // import "./Taskcss/Task_Item.css";
 import "./Taskcss/Task_Item.css";
 import { useDispatch, useSelector } from "react-redux";
-import { joinTeamTaSk, taskApi } from "../Api/api";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import { Link } from "react-router-dom";
-import { taskUpdateSuccess } from "../../New_Redux/Actions/UpdateActions";
+import {
+  getDeletedTask,
+  allTaskGet,
+  completedTaskAction,
+} from "../../New_Redux/Actions/getAllTask";
 // import { TaskUpdateForm } from "../TaskForm/TaskUpdateForm";
 
 function TaskItem({ setisLoggedIN, setloader }) {
@@ -34,9 +37,9 @@ function TaskItem({ setisLoggedIN, setloader }) {
 
   setisLoggedIN(true);
   const allTaskFuncHandler = async () => {
-    const allTask = await axios.get(taskApi);
+    const allTask = await dispatch(allTaskGet());
     setloader(false);
-    setallTaskData(allTask.data.data);
+    setallTaskData(allTask.payload);
   };
 
   const handleDateDDMMYYFormat = (date) => {
@@ -44,12 +47,14 @@ function TaskItem({ setisLoggedIN, setloader }) {
     return theDate.toLocaleDateString();
   };
 
-  const handleCompletedTask = async (taskId) => {
-    console.log(taskId);
+  const handleCompletedTask = async (task) => {
+    console.log(task);
     try {
-      let completedTask = await axios.put(
-        `http://localhost:5000/task/completed/${taskId}`
-      );
+      const completedTask = dispatch(completedTaskAction(task));
+      // let completedTask = await axios.put(
+      //   `http://localhost:5000/task/completed/${task.id}`
+      // );
+      console.log(completedTask);
       setloader(false);
       setcompletedTaskState(completedTask);
       if (completedTask) {
@@ -61,17 +66,19 @@ function TaskItem({ setisLoggedIN, setloader }) {
       console.log(error);
     }
   };
-  const handleDeletedTask = async (taskId) => {
-    console.log(taskId);
+  const handleDeletedTask = async (task) => {
+    console.log(task);
     try {
-      let deletedTask = await axios.put(
-        `http://localhost:5000/task/deletedtask/${taskId}`
-      );
+      const deletedTask = await dispatch(getDeletedTask(task));
+      // let deletedTask = await axios.put(
+      //   `http://localhost:5000/task/deletedtask/${task.id}`
+      // );
+      console.log(deletedTask);
       setDeletedTaskState(deletedTask);
       if (deletedTask) {
         toast.dismiss("task is deletedTask successfully");
       }
-      navgate("/deletedTask");
+      // navgate("/task");
       return deletedTask;
     } catch (error) {
       console.log(error || error.message);
@@ -79,30 +86,16 @@ function TaskItem({ setisLoggedIN, setloader }) {
   };
 
   const editHandler = async (data) => {
-    debugger
+    debugger;
     console.log("dsffffadfs");
-    // console.log("data", data);
-    // if (data == undefined) {
-    //   return navigate("/");
-    // }
-
-    // const datas = await dispatch(taskUpdateSuccess(data));
-    // console.log(datas);
     return navgate(`/edit/${data.id}`, { state: data });
   };
 
-  const getAllTasks = async () => {
-    const allTask = await axios.get(taskApi);
-    setallTaskData(allTask.data.data);
-  };
+  
 
   useEffect(async () => {
     allTaskFuncHandler();
-    getAllTasks();
-    // assignTaskNameFunc();
     setloader(false);
-    // const allTask = await axios.get(taskApi);
-    // setallTaskData(allTask.data.data);
   }, [completedTaskState]);
   return (
     <div className="cardStyle">
@@ -132,19 +125,17 @@ function TaskItem({ setisLoggedIN, setloader }) {
                         <Typography variant="body2" color="text.secondary">
                           {taskInfo.description}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {/* { setnameId(taskInfo.Assign_to ) } */}
-                          {/* assignned to - {assignTaskNameFunc( taskInfo.Assign_to)} */}
-                          {/* assignned to - {  assignTaskNameFunc(taskInfo.Assign_to) } */}
-                          {/* assignned to - {taskInfo.team.name} */}
-                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                        ></Typography>
                       </CardContent>
                       <CardActions>
                         {/* {taskInfo.completed == true && ( */}
                         <Button
                           variant="contained"
                           color="success"
-                          onClick={() => handleCompletedTask(taskInfo.id)}
+                          onClick={() => handleCompletedTask(taskInfo)}
                         >
                           Complete
                         </Button>
@@ -153,15 +144,18 @@ function TaskItem({ setisLoggedIN, setloader }) {
                           className="mr-2"
                           variant="contained"
                           color="error"
-                          onClick={() => handleDeletedTask(taskInfo.id)}
+                          onClick={() => handleDeletedTask(taskInfo)}
                         >
                           Delete
                         </Button>
                         {/* <Link to={`/edit/${taskInfo.id}`}> */}
-                          <Button variant="contained" onClick={ () =>  editHandler(taskInfo)}>
-                            Edit
-                            <EditIcon  />
-                          </Button>
+                        <Button
+                          variant="contained"
+                          onClick={() => editHandler(taskInfo)}
+                        >
+                          Edit
+                          <EditIcon />
+                        </Button>
                         {/* </Link> */}
                       </CardActions>
                     </Card>

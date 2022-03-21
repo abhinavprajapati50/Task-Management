@@ -19,8 +19,13 @@ import {
 import { Grid } from "@mui/material";
 import "./Dashboard.css";
 import { ToastContainer } from "react-toastify";
-import { completedTaskLink, taskApi } from "../Api/api";
-import axios from "axios";
+import {  useDispatch } from "react-redux";
+import { allTaskGet } from "../../New_Redux/Actions/getAllTask";
+import { getCompletedTaskAction } from "../../New_Redux/Actions/TeamActions";
+
+// import { allTaskGet } from "../../New_Redux/Actions/RegisterActions";
+
+
 
 const cardStyle = {
   backgroundColor: "#ccd7b7",
@@ -40,16 +45,21 @@ const PieChartData = [
 export const Dashboard = () => {
   const [allTasks, setAllTasks] = useState([]);
   const [allCompletedTask, setAllCompletedTask] = useState([]);
+  const dispatch = useDispatch();
 
   const allTaskFunc = async () => {
-    const allTask = await axios.get(taskApi);
-    setAllTasks(allTask.data.data);
-    const  allCompletedTask = await axios.get(completedTaskLink );
-    setAllCompletedTask(allCompletedTask.data.data);
+    const allTasks = await dispatch(allTaskGet())  
+    console.log(allTasks);
+    setAllTasks(allTasks.payload);
+    // const allCompletedTask = await axios.get(completedTaskLink);
+    const allCompletedTask = await dispatch(  getCompletedTaskAction () )
+
+    // const  allCompletedTask = await axios.get(completedTaskLink );
+    setAllCompletedTask(allCompletedTask.payload);
      
   };
 
-  console.log(allCompletedTask)
+  // console.log(allCompletedTask)
   useEffect(() => {
     allTaskFunc()
   }, [])
@@ -72,7 +82,7 @@ export const Dashboard = () => {
                 >
                   <CardContent>
                     <Typography
-                      variant="body2"
+                      // variant="body2"
                       color="text.secondary"
                       variant="h5"
                     >

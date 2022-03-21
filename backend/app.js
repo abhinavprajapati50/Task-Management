@@ -8,8 +8,6 @@ const upload = require("./imageuploader");
 const path = require("path");
 const { default: helmet } = require("helmet");
 const compression = require("compression");
-const { Allteam } = require("./Controller/Team");
-const { AllTask } = require("./Controller/task");
 const teamModal = require("./Model/TeamModal");
 const taskModal = require("./Model/taskModal");
 

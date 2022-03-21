@@ -2,7 +2,7 @@ const taskModal = require("../Model/taskModal");
 const teamModal = require("../Model/TeamModal");
 
 exports.task = async (req, res, next) => {
-  const { task, description, dueDate, Assign_to, status, chr_delete } =
+  const { task, description, dueDate, Assign_to, status, chr_delete, project_name } =
     req.body;
   if (!task || !description || !dueDate) {
     return res
@@ -17,6 +17,7 @@ exports.task = async (req, res, next) => {
       Assign_to,
       status,
       chr_delete,
+      project_name
     });
     // --
     let resMessage = "Task Created Successfully.";

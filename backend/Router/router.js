@@ -24,6 +24,7 @@ const { task, AllTask, completedTask, RejectedTask, deletedTask, updateTask, get
 const { team, Allteam, singleTeamUser,  } = require("../Controller/Team");
 const authExisting = require("../Middleware/authUser");
 const { joinTeamTask, scopes, completedTaskApi } = require("../JOIN TABLE/join");
+const { projects, AllProjects, updateProject } = require("../Controller/projects");
 
 const router = require("express").Router();
 
@@ -34,6 +35,12 @@ router.get("/", (req, res) => {
 // ------USER
 router.post("/signup", [authExisting.checkEmail] , signUpRoute);
 router.post("/signin", signin);
+
+// --------Projects
+router.post("/projects", projects);
+router.get("/allprojects", AllProjects);
+router.put("/project/edit/:id", updateProject);
+
 
 // ---------TASK
 router.post("/task", task);
@@ -50,8 +57,9 @@ router.get("/team/:id", singleTeamUser);
 router.get("/team", Allteam);
 
 // --------------- JOIN
-router.get("/joinTeamTaSk/:id", joinTeamTask);
+router.get("/joinTeamTask/:id", joinTeamTask);
 router.get("/completedTask", completedTaskApi);
+// router.get("/joinProject/:id", joinProjectTask);
 
 
 

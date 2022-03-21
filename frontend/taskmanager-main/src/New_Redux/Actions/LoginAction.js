@@ -20,7 +20,6 @@ export const LoginAction =
         });
       } else {
         localStorage.setItem("token", result.data.token);
-        // toast.success(`Welcome ${result.data.data} `);
         return dispatch({
           type: LOGIN_SUCCESS,
           isLoggedIN: true,

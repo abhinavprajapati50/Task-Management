@@ -7,7 +7,9 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { loginReducer } from "./Reducers/LoginReducers";
 import { registerReducer } from "./Reducers/RegisterReducers";
-import { updateReducer } from "./Reducers/UpdateReducers";
+import { deleteTaskReducer, editTaskReducer, getAllTaskReducers, updateReducer } from "./Reducers/GetTaskReducers";
+import { getJoinTeamTaskReducers, getSingleTeamReducers, teamReducer } from "./Reducers/TeamReducers";
+import { getAllProjectReducers, projectsReducer } from "./Reducers/ProjectReducers";
 
 const persistConfig = {
   key: "root",
@@ -17,7 +19,16 @@ const persistConfig = {
 const rootReducer = combineReducers({
   userLogin: loginReducer,
   userRegister: registerReducer,
-  taskUpdateReducer: updateReducer
+  taskUpdateReducer: updateReducer, 
+  getAllTaskReducers: getAllTaskReducers,
+  editTaskReducer: editTaskReducer,
+  deleteTaskReducer: deleteTaskReducer,
+  teamReducer: teamReducer,
+  getSingleTeamReducers: getSingleTeamReducers,
+  getJoinTeamTaskReducers: getJoinTeamTaskReducers,
+  projectsReducer: projectsReducer,
+  getAllProjectReducers:getAllProjectReducers
+
 });
 
 const middleware = [thunk];

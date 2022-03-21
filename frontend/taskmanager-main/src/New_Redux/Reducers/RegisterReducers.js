@@ -10,16 +10,13 @@ const initialState = {
 };
 
 export const registerReducer = (state = initialState, action) => {
-  console.log("Register -- action ==>>> ", action);
   switch (action.type) {
     case REGISTER_START:
-      console.log("Register -- action -- REGISTER_START ==>>> ", action);
       return {
         loading: true,
       };
 
     case REGISTER_SUCCESS:
-      console.log("Register -- action -- REGISTER_SUCCESS ==>>> ", action);
       return {
         ...state,
         loading: false,
@@ -27,7 +24,6 @@ export const registerReducer = (state = initialState, action) => {
       };
 
     case REGISTER_FAIL:
-      console.log("Register -- action -- REGISTER_FAIL ==>>> ", action);
       return {
         ...state,
         loading: false,

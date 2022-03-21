@@ -37,10 +37,16 @@ function MainMenu({ setisLoggedIN }) {
       </button>
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav">
-          <Link className="nav-link" to="/dashboard">
+          <Link className="nav-link" to="/">
             <li className="nav-item">Dashboard</li>
           </Link>
-          <Link className="nav-link" to="/">
+          <Link className="nav-link" to="/project_list">
+            <li className="nav-item">Projects</li>
+          </Link>
+          <Link className="nav-link" to="/newproject">
+            <li className="nav-item">Add Project</li>
+          </Link>
+          <Link className="nav-link" to="/task">
             <li className="nav-item">Tasks</li>
           </Link>
           <Link className="nav-link" to="/newtask">

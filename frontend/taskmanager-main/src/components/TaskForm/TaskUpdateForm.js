@@ -14,43 +14,24 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import "./Task_Form.css";
 import axios from "axios";
-import { taskApi, teamApi } from "../Api/api";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { taskUpdateSuccess } from "../../New_Redux/Actions/UpdateActions";
+import { taskUpdateSuccess } from "../../New_Redux/Actions/getAllTask";
+import { getAllTeamAction } from "../../New_Redux/Actions/TeamActions";
 
 export const TaskUpdateForm = () => {
   const { state } = useLocation();
-
-  // const singleTask = useSelector((state) => state.taskUpdateReducer.updateTask);
-  // console.log(singleTask);
-  // const singleTask = useSelector((state) => state.user.currentUser);
-
-  // console.log("singleTask", singleTask);
-
   const [dead_line, setdead_line] = useState(state.dueDate);
   const [Assign_to, setAssign_to] = useState(state.Assign_to);
   const [task, setTask] = useState(state.task);
   const [description, setDescription] = useState(state.description);
   const [teamData, setteamData] = useState([]);
-  const [taskData, setTaskData] = useState([]);
-  const [updatedData, setupdatedData] = useState();
   const [taskSingleData, settaskSingleData] = useState(null);
   const navigate = useNavigate();
   const params = useParams();
   const dispatch = useDispatch();
 
-  // const userId = pathname.replace("/edit-user/", "");
-  // console.log(taskSingleData.id);
-  // console.log(
-  //   "-------------=-=-=(((((((((((taskSingleData--",
-  //   taskSingleData.Assign_to,
-  //   taskSingleData.dueDate,
-  //   taskSingleData.id,
-  //   taskSingleData.status,
-  //   taskSingleData.description,
-  //   taskSingleData.task
-  // );
+ 
   const handleChange = (event) => {
     setAssign_to(event.target.value);
   };
@@ -59,27 +40,12 @@ export const TaskUpdateForm = () => {
     console.log("0-0-0-0-0", newValue.toDateString());
     setdead_line(newValue.toDateString());
   };
-  // const handleAllTeam = async () => {
-  //   const teamData = await axios.get("http://localhost:5000/team");
-  //   setteamData(teamData.data.data);
-  // };
   const handleAllTeam = async () => {
-    const allTask = await axios.get(teamApi);
-    setteamData(allTask.data.data);
+    const allTask = await dispatch( getAllTeamAction() )
+    setteamData(allTask.payload);
   };
 
-  const handleAllTask = async () => {
-    const taskDatas = await axios.get(
-      `http://localhost:5000/task/edit/${state.id}`
-    );
-    // console.log(taskData.data.data);
-    setTaskData(taskDatas.data.data);
-
-    // const updateTask = await axios.get(
-    //   `http://localhost:5000/task/edit/${taskSingleData.id}`
-    // );
-    // console.log("---------------------updated task one",updateTask.data.data);
-  };
+  
 
   const updateHandler = async (e) => {
     debugger;
@@ -93,25 +59,10 @@ export const TaskUpdateForm = () => {
       Assign_to,
     };
     console.log(user);
-    // console.log(await dispatch(taskUpdateSuccess(user)));
     const updateData = await dispatch(taskUpdateSuccess(user));
     console.log("=================<<<<>>>>>", updateData);
-    // return updateData;
-    // try {
-    //   const updateTask = await axios.put(
-    //     `http://localhost:5000/task/edit/${taskSingleData.id}`,
-    //     user
-    //   );
-
-    //   if (updateTask) {
-    //     toast.success("Updatede successfully");
-    //   }
-    //   setupdatedData(updateTask);
-    //   navigate("/");
-    //   console.log(updateTask);
-    //   // seterror(resultTask.data.message);
     updateData
-      ? toast.success(updateData) && navigate("/") && clearData()
+      ? toast.success(updateData) && navigate("/task") && clearData()
       : toast.error(updateData);
     console.log("-=-=-=-=-=-=resultTask", updateData);
     // } catch (error) {
@@ -139,7 +90,6 @@ export const TaskUpdateForm = () => {
   // console.log(taskSingleData);
 
   useEffect(() => {
-    handleAllTask();
     handleAllTeam();
     settaskSingleData(state);
   }, [task, Assign_to]);

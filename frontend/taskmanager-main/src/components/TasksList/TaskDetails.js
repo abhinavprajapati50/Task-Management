@@ -10,7 +10,9 @@ import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import "./Taskcss/Task_Details.css";
 import axios from "axios";
-import { joinTeamTaSk, taskApi, teamApi } from "../Api/api";
+import { useDispatch } from "react-redux";
+import { getJoinTeamTaskAction } from "../../New_Redux/Actions/TeamActions";
+import { allTaskGet } from "../../New_Redux/Actions/getAllTask";
 
 export const TaskDetails = () => {
   const [allTasks, setallTasks] = useState([]);
@@ -20,32 +22,36 @@ export const TaskDetails = () => {
   const [subTasks, setsubTasks] = useState([]);
   const [teamName, setteamName] = useState("");
   const paramas = useParams();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   // console.log("--------",allTasks);
 
   const getAllUser = async () => {
-    const allTask = await axios.get(taskApi);
-    setallTasks(allTask.data.data);
+    const allTask = await dispatch(allTaskGet());
+    setallTasks(allTask.payload);
   };
   // console.log(allTasks, allTeamsMembers);
 
   const getAllTeamMembers = async () => {
-    const allTeams = await axios.get(
-      `http://localhost:5000/joinTeamTaSk/${paramas.id}`
-    );
+    const allTeams = await dispatch(getJoinTeamTaskAction(paramas.id));
     // const allTeams = await axios.get(joinTeamTaSk);
-    const itemSubData = allTeams.data.data.map((data) => data.tasks);
-    console.log(itemSubData[0].map((cur) => cur));
+    // const allTeams = await axios.get(
+    //   `http://localhost:5000/joinTeamTask/${paramas.id}`
+    // );
+    // const allTeams = await axios.get(joinTeamTaSk);
+    const itemSubData = allTeams.payload.map((data) => data.tasks);
     setsubTasks(itemSubData[0]);
-    setallT(allTeams.data.data);
+    setallT(allTeams.payload);
 
-    setallTeamsMembers(allTeams.data.data);
+    setallTeamsMembers(allTeams.payload);
   };
 
   const assignTaskNameFunc = async () => {
+
     const assignedName = await axios.get(
       `http://localhost:5000/team/${paramas.id}`
     );
+    console.log("------------=-=-=-=-=assignedName-==-=", assignedName);
     setassignTaskName(assignedName.data.data.name);
     setteamName();
 
@@ -62,10 +68,8 @@ export const TaskDetails = () => {
     getAllTeamMembers();
     assignTaskNameFunc();
   }, [assignTaskName]);
-  console.log(assignTaskName);
   return (
     <>
-      {console.log("Hello From My side")}
       <div className="card_body">
         <div className="arrow_back">
           <ArrowBackIcon onClick={() => navigate(-1)} />
@@ -93,14 +97,6 @@ export const TaskDetails = () => {
                         assign to - <strong>{assignTaskName} </strong>
                       </Typography>
                     </CardContent>
-                    {/* <CardActions>
-                  <Button variant="contained" color="success">
-                    Complete
-                    </Button>
-                    <Button variant="contained" color="warning">
-                    Delete
-                    </Button>
-                  </CardActions> */}
                   </Card>
                 </div>
               </>

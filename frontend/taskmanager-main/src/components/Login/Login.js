@@ -108,7 +108,7 @@ export const Login = ({ setisLoggedIN }) => {
     setisLoggedIN(true);
     clearData();
     toast.success(`Welcome to ${registeredUser.payload.username} `);
-    navigate("/dashboard", { return: true });
+    navigate("/", { return: true });
 
     // navigate("admin", { return: true });
   };
@@ -135,7 +135,7 @@ export const Login = ({ setisLoggedIN }) => {
     clearData();
     toast.success(`Welcome ${loggedInData.payload.username} `);
     // toast.success(result.data.message);
-    navigate("/dashboard", { return: true });
+    navigate("/", { return: true });
   };
 
   const clearData = () => {

@@ -19,10 +19,8 @@ export const RegisterActions =
         password,
         role,
       });
-      // console.log("result--=-=--=-=-=-=-=-=-=", result);
 
       if (result.data.status == false) {
-        // toast.error(result.data.message);
         return dispatch({
           type: REGISTER_FAIL,
           isRegistered: false,
@@ -32,7 +30,6 @@ export const RegisterActions =
       } else {
         localStorage.setItem("token", result.data.token);
         toast.success(result.data.username);
-        // console.log("=--------------=-=result.data.data", result);
         return dispatch({
           type: REGISTER_SUCCESS,
           isRegistered: true,

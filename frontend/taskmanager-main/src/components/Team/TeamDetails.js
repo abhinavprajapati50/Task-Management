@@ -10,16 +10,19 @@ import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import "./Team_Details.css";
 import axios from "axios";
-import { teamApi } from "../Api/api";
+import { getAllTeamAction } from "../../New_Redux/Actions/TeamActions";
+import { useDispatch } from "react-redux";
 
 export const TeamDetails = () => {
   const paramas = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [allUser, setallUser] = useState([]);
 
   const getAllUser = async () => {
-    const allTeams = await axios.get(teamApi);
-    setallUser(allTeams.data.data);
+    const allTeams = await dispatch( getAllTeamAction() )
+    ;
+    setallUser(allTeams.payload);
   };
   useEffect(async () => {
     getAllUser();

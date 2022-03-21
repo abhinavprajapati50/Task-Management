@@ -17,9 +17,14 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import axios from "axios";
-import { teamApi } from "../Api/api";
 import { useNavigate } from "react-router-dom";
-
+import {
+  getAllTeamAction,
+  getSingleTeamMemberAction,
+  teamActions,
+} from "../../New_Redux/Actions/TeamActions";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,6 +86,7 @@ export const Team = () => {
   const [team, setteam] = useState([]);
   const classes = useStyles();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -89,33 +95,33 @@ export const Team = () => {
   };
   const showTaskHandler = async (id) => {
     console.log("taskHadnler", id);
-
-    // const singleUser = await axios.get(`http://localhost:5000/team/${userId}`);
-    // console.log("----------------singleUser", singleUser.data.data);
-    // navigate(`/team/${singleUser.data.data.id}`)
-
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(fullName, gender, role);
-
-    const result = await axios.post(teamApi, {
+    debugger;
+    console.log(fullName, gender);
+    const teamDatas = {
       name: fullName,
       gender,
       work: role,
-    });
+    };
+    if (!fullName || !gender ) {
+      return toast.error("All Field required !!");
+    }
+
+    const result = await dispatch(teamActions(teamDatas));
+    console.log("-------------result", result);
+   
 
     clearState();
     console.log(result);
     handleClose();
   };
 
-  const singleUserHandler = async (userId) => {
-    const singleUser = await axios.get(`http://localhost:5000/team/${userId}`);
-    console.log("----------------singleUser", singleUser.data.data);
-    navigate(`/team/${singleUser.data.data.id}`)
-    
+  const singleUserHandler = async (teamId) => {
+    const singleUser = await dispatch(getSingleTeamMemberAction(teamId));
+    navigate(`/team/${singleUser.payload.id}`);
   };
 
   const clearState = (e) => {
@@ -125,8 +131,8 @@ export const Team = () => {
   };
 
   const AllTeamUser = async (e) => {
-    const team = await axios.get(teamApi);
-    setteam(team.data.data);
+    const allTask = await dispatch(getAllTeamAction());
+    setteam(allTask.payload);
   };
 
   useEffect(async () => {
@@ -159,7 +165,7 @@ export const Team = () => {
                   <TextField
                     label="Full Name"
                     variant="filled"
-                    required
+                    // required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                   />
@@ -187,7 +193,7 @@ export const Team = () => {
                   <TextField
                     label="Role"
                     variant="filled"
-                    required
+                    // required
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
                   />
@@ -226,13 +232,13 @@ export const Team = () => {
                       {team.work}
                     </Typography>
                     {/* <Link to={`/team/${team.id}`}> */}
-                      <Button
-                        onClick={() => {
-                          singleUserHandler(team.id);
-                        }}
-                      >
-                        View
-                      </Button>
+                    <Button
+                      onClick={() => {
+                        singleUserHandler(team.id);
+                      }}
+                    >
+                      View
+                    </Button>
                     {/* </Link> */}
 
                     <Link to={`/task/${team.id}`}>

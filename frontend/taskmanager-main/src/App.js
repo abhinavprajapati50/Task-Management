@@ -5,6 +5,7 @@ import {
   Routes,
   Switch,
   Navigate,
+  useLocation
 } from "react-router-dom";
 
 import MainMenu from "./components/MainMenu/MainMenu";
@@ -23,15 +24,18 @@ import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
 import { Loader } from "./components/Loader";
 import { TaskUpdateForm } from "./components/TaskForm/TaskUpdateForm";
+import { Project_Form } from "./components/ProjectForm/Project-Form";
+import { Project_List } from "./components/ProjectForm/Project_List";
 
 function App() {
+  // const location = useLocation()
   const [isLoggedIN, setisLoggedIN] = useState(
     localStorage.getItem("token") ? true : false
   );
   const [loader, setloader] = useState(false);
   console.log(loader);
 
-  // console.log("-------------=--=-isLoggedIN", authuser);
+  // console.log("-------------=--=-location", location);
   return (
     <>
       <ToastContainer />
@@ -59,20 +63,39 @@ function App() {
               <Routes>
                 <Route
                   path="/"
+                    element={<Dashboard />}
+                  
+                />
+                {/* <Route
+                  path="/"
                   element={
                     <TaskItem
                       setisLoggedIN={setisLoggedIN}
                       setloader={setloader}
                     />
                   }
-                />
-                <Route path="/task/:id" element={<TaskDetails />} />
+                /> */}
+                <Route path="/task/:id" element={<TaskDetails />} />            
                 <Route path="/newtask" element={<TaskForm />} />
+                <Route path="/newproject" element={<Project_Form />} />
                 <Route path="/edit/:id" element={<TaskUpdateForm />} />
+                <Route path="/project/edit/:id" element={<Project_Form />} />
                 <Route path="/completedtask" element={<CompletedTask />} />
                 <Route path="/team" element={<Team />} />
                 <Route path="/team/:id" element={<TeamDetails />} />
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/task" element={
+                    <TaskItem
+                      setisLoggedIN={setisLoggedIN}
+                      setloader={setloader}
+                    />
+                  }   />
+                <Route path="/project_list" element={
+                    <Project_List
+                      setisLoggedIN={setisLoggedIN}
+                      setloader={setloader}
+                    />
+                  }   />
+                {/* <Route path="/dashboard" element={<Dashboard />} /> */}
                 <Route path="*" element={<Navigate replace to="/" />} />
               </Routes>
             </>
