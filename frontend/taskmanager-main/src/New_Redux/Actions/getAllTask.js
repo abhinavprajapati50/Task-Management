@@ -131,6 +131,7 @@ export const completedTaskAction = (task) => async (dispatch) => {
     const allTasks = await axios.put(
       `http://localhost:5000/task/completed/${task.id}`
     );
+    console.log("----------completed task", allTasks);
     if (allTasks) {
       return dispatch({
         type: COMPLETE_TASK_SUCCESS,

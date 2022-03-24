@@ -26,30 +26,31 @@ exports.joinTeamTask = async (req, res, next) => {
     });
   }
 };
-// exports.joinProjectTask = async (req, res, next) => {
-//   //   const { title, slug, description, chr_delete } = req.body;
-//   try {
-//     const result_Team = await projectModal.findAll({
-//       include: taskModal,
-//       //   attributes:['id' ]
-//       where: { id: req.params.id },
-//     });
-//     // --
-//     let resMessage = "All Teams are redered  Successfully join .";
+exports.joinProjectTask = async (req, res, next) => {
+  //   const { title, slug, description, chr_delete } = req.body;
+  try {
+    const result_Team = await projectModal.findAll({
+      include: taskModal,
+      // [Op.not]: null,
+      where: { id: req.params.id, status:0, chr_delete:0 },
+      //   attributes:['id' ]
+    });
+    // --
+    let resMessage = "All Teams are redered  Successfully join .";
 
-//     res.status(200).json({
-//       status: true,
-//       message: resMessage,
-//       data: result_Team,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       status: false,
-//       message: "Team is not redered!!!!!",
-//       data: error || error.message,
-//     });
-//   }
-// };
+    res.status(200).json({
+      status: true,
+      message: resMessage,
+      data: result_Team,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: "Team is not redered!!!!!",
+      data: error || error.message,
+    });
+  }
+};
 
 // ------------------------------        SCOPES            -----------------------------
 

@@ -10,6 +10,7 @@ import { registerReducer } from "./Reducers/RegisterReducers";
 import { deleteTaskReducer, editTaskReducer, getAllTaskReducers, updateReducer } from "./Reducers/GetTaskReducers";
 import { getJoinTeamTaskReducers, getSingleTeamReducers, teamReducer } from "./Reducers/TeamReducers";
 import { getAllProjectReducers, projectsReducer } from "./Reducers/ProjectReducers";
+import { getAllProjectTasksJoinReducers } from "./Reducers/ProjectTaskReducer";
 
 const persistConfig = {
   key: "root",
@@ -17,8 +18,8 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-  userLogin: loginReducer,
-  userRegister: registerReducer,
+  loginReducer: loginReducer,
+  registerReducer: registerReducer,
   taskUpdateReducer: updateReducer, 
   getAllTaskReducers: getAllTaskReducers,
   editTaskReducer: editTaskReducer,
@@ -27,7 +28,8 @@ const rootReducer = combineReducers({
   getSingleTeamReducers: getSingleTeamReducers,
   getJoinTeamTaskReducers: getJoinTeamTaskReducers,
   projectsReducer: projectsReducer,
-  getAllProjectReducers:getAllProjectReducers
+  getAllProjectReducers: getAllProjectReducers,
+  getAllProjectTasksJoinReducers:getAllProjectTasksJoinReducers
 
 });
 

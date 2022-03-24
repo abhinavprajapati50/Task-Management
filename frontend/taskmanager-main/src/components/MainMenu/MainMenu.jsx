@@ -49,9 +49,9 @@ function MainMenu({ setisLoggedIN }) {
           <Link className="nav-link" to="/task">
             <li className="nav-item">Tasks</li>
           </Link>
-          <Link className="nav-link" to="/newtask">
+          {/* <Link className="nav-link" to="/newtask">
             <li className="nav-item">Add Task</li>
-          </Link>
+          </Link> */}
           <Link className="nav-link" to="/team">
             <li className="nav-item">Team-members</li>
           </Link>

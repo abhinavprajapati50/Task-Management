@@ -45,7 +45,9 @@ export const Project_List = ({ setisLoggedIN, setloader }) => {
   };
     
     const viewHandler = async (data) => {
-        console.log(data);
+      console.log(data);
+      return navgate(`/project/add-task/${data.id}`, { state: data });
+
         // const viewTaskRelatedProject = await dispatch()
   };
 
@@ -97,7 +99,7 @@ export const Project_List = ({ setisLoggedIN, setloader }) => {
                       variant="contained"
                       onClick={() => viewHandler(taskInfo)}
                     >
-                      View
+                      Task
                     </Button>
                     {/* </Link> */}
                   </CardActions>

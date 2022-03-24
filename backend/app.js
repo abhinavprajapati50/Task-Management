@@ -10,6 +10,7 @@ const { default: helmet } = require("helmet");
 const compression = require("compression");
 const teamModal = require("./Model/TeamModal");
 const taskModal = require("./Model/taskModal");
+const projectModal = require("./Model/ProjectModal");
 
 
 require("dotenv").config();
@@ -49,9 +50,10 @@ sequelize
     app.listen(process.env.PORT || PORT, () => {
       console.log(`the post is listning on ${PORT}`);
     });
-    teamModal.hasMany(taskModal , { foreignKey: "Assign_to" });
-    taskModal.belongsTo(teamModal, { foreignKey: "Assign_to" });
+    teamModal.hasMany(taskModal , { foreignKey: "Assign_to" });    //team arry have task  related foreign key
+    taskModal.belongsTo(teamModal, { foreignKey: "Assign_to" });   //task arry have team related foreign key
 
+ projectModal.hasMany(taskModal, { foreignKey: "project_name"})
     
     
     // teamModal.hasMany(taskModal , { foreignKey: "Assign_to" });
@@ -64,6 +66,13 @@ sequelize
         chr_delete:0
       }
     });
+    // taskModal.addScope("projectTaskCompleted", {
+    //   where: {
+    //     status: 0,
+    //     chr_delete:0
+    //   }
+    // });
+
 
 
   })

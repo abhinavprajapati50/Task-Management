@@ -35,7 +35,7 @@ export const Login = ({ setisLoggedIN }) => {
   const [registerPassError, setregisterPassError] = useState(false);
   const [registerConfirmPassError, setregisterConfirmPassError] =
     useState(false);
-  const [age, setAge] = React.useState("");
+  const [loginData, setloginData] = useState(null);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -43,7 +43,7 @@ export const Login = ({ setisLoggedIN }) => {
   const Loading = useSelector((state) => state.userloading);
   // const user = useSelector((state) => state.user);
   // const authuser = useSelector((state) => state.authUser);
-
+console.log("----------loggedUser", loginData);
   const label = visibility ? "aria-label" : "Checkbox demo";
 
   const handleChange = (event) => {
@@ -94,7 +94,9 @@ export const Login = ({ setisLoggedIN }) => {
       return;
     }
     console.log("---------------->", signUpUser);
+    setloginData(signUpUser)
     const registeredUser = await dispatch(RegisterActions(signUpUser));
+    
     console.log(registeredUser);
     // isRegistered
     if (registeredUser.isRegistered == false) {
@@ -107,6 +109,7 @@ export const Login = ({ setisLoggedIN }) => {
     // }
     setisLoggedIN(true);
     clearData();
+    console.log("--------------loggedInData.payload", registeredUser.payload);
     toast.success(`Welcome to ${registeredUser.payload.username} `);
     navigate("/", { return: true });
 
@@ -121,10 +124,12 @@ export const Login = ({ setisLoggedIN }) => {
     const loginCredentials = {
       email,
       password,
+      role
     };
     const loggedInData = await dispatch(LoginAction(loginCredentials));
 
     console.log(loggedInData);
+    setloginData(loggedInData)
 
     if (loggedInData.isLoggedIn == false) {
       toast.error(loggedInData.payload);
@@ -132,6 +137,7 @@ export const Login = ({ setisLoggedIN }) => {
     }
     setisLoggedIN(true);
 
+    console.log("--------------loggedInData.payload", loggedInData.payload);
     clearData();
     toast.success(`Welcome ${loggedInData.payload.username} `);
     // toast.success(result.data.message);

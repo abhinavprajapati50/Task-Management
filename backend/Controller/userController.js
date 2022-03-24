@@ -2,8 +2,9 @@ const User = require("../Model/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const jwtTokenHandler = (id) => {
-  return jwt.sign({ id: id }, process.env.JWT_TOKEN, {
+const jwtTokenHandler = (result) => {
+
+  return jwt.sign({ id:result.id, email:result.email,role:result.role }, process.env.JWT_TOKEN, {
     expiresIn: process.env.EXPIRE_IN,
   });
 };
@@ -15,17 +16,7 @@ exports.signUpRoute = async (req, res, next) => {
 
   const regularExpression =
     /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-  console.log("------------------------0-0-0-0-0-", role);
-  console.log(
-    "------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>",
-    req.body
-  );
   try {
-    // if (!username || !password || !email || !confirmpassword) {
-    //   return res
-    //     .status(200)
-    //     .json({ status: false, message: "All Field required!!" });
-    // }
     if (!username) {
       return res
         .status(200)
@@ -42,12 +33,6 @@ exports.signUpRoute = async (req, res, next) => {
         .status(200)
         .json({ status: false, message: "Plz fill the password" });
     }
-    // if (!confirmpassword) {
-    //   return res.status(200).json({
-    //     status: false,
-    //     message: "Plz fill the confirmpassword",
-    //   });
-    // }
 
     if (!emailRegexp.test(email)) {
       res.status(200).json({ status: false, message: "Email is not valid" });
@@ -62,7 +47,6 @@ exports.signUpRoute = async (req, res, next) => {
       return false;
     }
 
-    // console.log("---------=-=", req.body);
     const data = await User.findOne({ where: { email: email } });
 
     if (data) {
@@ -73,8 +57,6 @@ exports.signUpRoute = async (req, res, next) => {
       });
     }
 
-    // console.log("---------------=-the data", data);
-
     const bcryptPass = await bcrypt.hash(password, 12);
     const result = await User.create({
       email: email,
@@ -82,16 +64,14 @@ exports.signUpRoute = async (req, res, next) => {
       username: username,
       role: role,
     });
-    const token = jwtTokenHandler(result.id);
-
-    console.log("--------------=->>>>>>>>>>>>>>>>>>token", result);
-    // console.log("--------------=-req.headers", req.headers);
+    // const reusltData = {id:result.id, email:result.email,role:result.role }
+    const token = jwtTokenHandler(result);
 
     if (result) {
       return res.status(200).json({
         status: true,
         message: "user is successfull register",
-        data: { username: result.username, email: result.email },
+        data: { username: result.username, email: result.email, role: role },
         token,
       });
     }
@@ -123,8 +103,6 @@ exports.signin = async (req, res) => {
       .status(200)
       .json({ status: false, message: "Plz fill the password" });
   }
-  console.log("--------------------");
-  console.log("--------------------", req.body);
   const alreadyExists = await User.findOne({ where: { email } });
 
   if (!alreadyExists) {
@@ -134,19 +112,11 @@ exports.signin = async (req, res) => {
     });
   }
   try {
-    console.log(
-      "------------=-alreadyExists",
-      password,
-      alreadyExists.password
-    );
-
-    // console.log("---------the sigin data", alreadyExists);
     if (alreadyExists) {
       await bcrypt.compare(
         password,
         alreadyExists.password,
         (err, descPass) => {
-          console.log("--------------------=-=-=", err);
           if (err) {
             return res.status(200).json({
               status: false,
@@ -155,7 +125,6 @@ exports.signin = async (req, res) => {
             });
           }
           if (descPass) {
-            console.log("--------------descPass", descPass);
             jwt.sign(
               { id: alreadyExists.id },
               "theimaginarydragontheabhinavprajapati",
@@ -173,7 +142,7 @@ exports.signin = async (req, res) => {
       );
 
       if (alreadyExists && comparePass) {
-        const token = jwtTokenHandler(alreadyExists.id);
+        const token = jwtTokenHandler(alreadyExists);
 
         return res.status(200).json({
           status: true,
@@ -181,6 +150,7 @@ exports.signin = async (req, res) => {
           data: {
             username: alreadyExists.username,
             email: alreadyExists.email,
+            role: alreadyExists.role,
           },
           // data: alreadyExists.username,
           token,

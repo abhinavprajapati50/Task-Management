@@ -5,7 +5,7 @@
   width: 100%;
   padding: 3.5rem;
   padding-bottom: 6rem;
-  padding: 10px 390px 20px ;  
+  padding: 10px 390px 20px;
 }
 
 .addtaskform {
@@ -17,7 +17,15 @@
   padding: 3rem;
 }
 
-.error{
+.error {
   /* border: 1px solid red; */
-  color:  red;
+  color: red;
+}
+
+.ArrowBackIcon {
+  background-color: blue;
+  width: 5%;
+  color: white;
+  cursor: pointer;
+  border-radius: 0.8rem;
 }

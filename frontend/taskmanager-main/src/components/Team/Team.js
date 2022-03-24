@@ -15,6 +15,11 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
+import AddIcon from "@mui/icons-material/Add";
+import Fab from "@mui/material/Fab";
+import Zoom from "@mui/material/Zoom";
+import { useTheme } from "@mui/material/styles";
+
 import FormLabel from "@mui/material/FormLabel";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -77,9 +82,16 @@ const style = {
   px: 4,
   pb: 3,
 };
+const fabStyle = {
+  position: "absolute",
+  bottom: 206,
+  right: 16,
+};
 
 export const Team = () => {
-  const [open, setOpen] = React.useState(false);
+  const theme = useTheme();
+
+  const [open, setOpen] = useState(false);
   const [fullName, setFullName] = useState("");
   const [gender, setGender] = useState("");
   const [role, setRole] = useState("");
@@ -87,6 +99,7 @@ export const Team = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [value, setValue] = React.useState(0);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -97,6 +110,13 @@ export const Team = () => {
     console.log("taskHadnler", id);
   };
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleChangeIndex = (index) => {
+    setValue(index);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     debugger;
@@ -106,13 +126,12 @@ export const Team = () => {
       gender,
       work: role,
     };
-    if (!fullName || !gender ) {
+    if (!fullName || !gender) {
       return toast.error("All Field required !!");
     }
 
     const result = await dispatch(teamActions(teamDatas));
     console.log("-------------result", result);
-   
 
     clearState();
     console.log(result);
@@ -134,6 +153,23 @@ export const Team = () => {
     const allTask = await dispatch(getAllTeamAction());
     setteam(allTask.payload);
   };
+  const fabs = [
+    {
+      color: "primary",
+      sx: fabStyle,
+      icon: <AddIcon />,
+      label: "Add",
+    },
+    {
+      color: "secondary",
+      sx: fabStyle,
+      icon: <AddIcon />,
+      // icon: <EditIcon />,
+      //   icon: <UpIcon />,
+      label: "Add",
+    },
+    
+  ];
 
   useEffect(async () => {
     AllTeamUser();
@@ -143,10 +179,10 @@ export const Team = () => {
     <div className="card_Styles">
       <div>
         <div className="add_button">
-          <Button onClick={handleOpen} variant="contained" color="primary">
+          {/* <Button onClick={handleOpen} variant="contained" color="primary">
             {" "}
             Add Team-Member
-          </Button>
+          </Button> */}
         </div>
         <div className="addmodal">
           <StyledModal
@@ -250,6 +286,12 @@ export const Team = () => {
                 </Card>
               </div>
             ))}
+           
+          <Fab sx={fabStyle} aria-label="Add" color="primary">
+                  {/* {fab.icon} */}
+                  <AddIcon onClick={handleOpen} />
+          </Fab>
+        
           </div>
         </div>
       </div>

@@ -26,6 +26,7 @@ import { Loader } from "./components/Loader";
 import { TaskUpdateForm } from "./components/TaskForm/TaskUpdateForm";
 import { Project_Form } from "./components/ProjectForm/Project-Form";
 import { Project_List } from "./components/ProjectForm/Project_List";
+import { ProjectTasks } from "./components/ProjectForm/ProjectTasks";
 
 function App() {
   // const location = useLocation()
@@ -80,15 +81,16 @@ function App() {
                 <Route path="/newproject" element={<Project_Form />} />
                 <Route path="/edit/:id" element={<TaskUpdateForm />} />
                 <Route path="/project/edit/:id" element={<Project_Form />} />
+                <Route path="/project/add-task/:id" element={<ProjectTasks />} />
                 <Route path="/completedtask" element={<CompletedTask />} />
                 <Route path="/team" element={<Team />} />
                 <Route path="/team/:id" element={<TeamDetails />} />
-                <Route path="/task" element={
+                {/* <Route path="/task" element={
                     <TaskItem
                       setisLoggedIN={setisLoggedIN}
                       setloader={setloader}
                     />
-                  }   />
+                  }   /> */}
                 <Route path="/project_list" element={
                     <Project_List
                       setisLoggedIN={setisLoggedIN}

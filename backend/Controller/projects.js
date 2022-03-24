@@ -1,4 +1,6 @@
+const { Op } = require("sequelize/dist");
 const projectModal = require("../Model/ProjectModal");
+const taskModal = require("../Model/taskModal");
 
 exports.projects = async (req, res, next) => {
   const { project, description, dueDate, status, chr_delete} = req.body;
@@ -36,9 +38,13 @@ exports.AllProjects = async (req, res, next) => {
   try {
     const all_Projects = await projectModal.findAll({
       order: [["id", "DESC"]],
-      // include: teamModal,
+      include: taskModal,
       // //   attributes:['id' ]
-      where: { status: 0, chr_delete: 0 },
+      where: {
+        status: 0, chr_delete: 0,
+          // [Op.not]: null
+        
+       },
     });
     // --
     let resMessage = "All Projects rendered successfully.";
@@ -51,7 +57,7 @@ exports.AllProjects = async (req, res, next) => {
   } catch (error) {
     res.status(500).json({
       status: false,
-      message: "Tasks is not redered!!!",
+      message: "Project is not redered!!!",
       data: error || error.message,
     });
   }

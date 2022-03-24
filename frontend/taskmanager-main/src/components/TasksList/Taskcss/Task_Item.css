@@ -12,3 +12,8 @@
   padding: 1rem;
 }
 
+.filter_button{
+  cursor: pointer;
+  width: 100%;
+  padding: 1rem;
+}

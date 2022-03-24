@@ -8,21 +8,22 @@ import Typography from "@mui/material/Typography";
 import "./Taskcss/Completed_Task.css";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getCompletedTaskAction } from "../../New_Redux/Actions/TeamActions";
 import { getDeletedTask } from "../../New_Redux/Actions/getAllTask";
 
-
 export const CompletedTask = () => {
   const [taskData, settaskData] = useState([]);
   const [deletedTaskState, setDeletedTaskState] = useState([]);
-  const navgate = useNavigate();
-  const dispatch = useDispatch()
+  const{pathname} = useLocation();
+
+  const dispatch = useDispatch();
 
   const taskDataFunc = async () => {
-    const allCompletedTask = await dispatch(  getCompletedTaskAction() )
+    const allCompletedTask = await dispatch(getCompletedTaskAction());
     // const task = await axios.get(completedTaskLink);
+    console.log(allCompletedTask);
     settaskData(allCompletedTask.payload);
   };
   const handleDateDDMMYYFormat = (date) => {
@@ -31,30 +32,26 @@ export const CompletedTask = () => {
   };
 
   const handleDeletedTask = async (task) => {
-    console.log(task);
     try {
       // let deletedTask = await axios.put(
-        //   `http://localhost:5000/task/deletedtask/${taskId}`
-        // );
-        const deletedTask = await dispatch(getDeletedTask(task));
-        console.log(deletedTask);
-        setDeletedTaskState(deletedTask);
-        if (deletedTaskState) {
-          toast.success("task is deletedTask successfully");
-        }
-        console.log(deletedTask.data.data);
-        // navgate("/deletedTask")
-        return deletedTask;
-      } catch (error) {
-        console.log(error);
+      //   `http://localhost:5000/task/deletedtask/${taskId}`
+      // );
+      const deletedTask = await dispatch(getDeletedTask(task));
+      setDeletedTaskState(deletedTask);
+      if (deletedTaskState) {
+        toast.success("task is deletedTask successfully");
+      }
+      // navgate("/deletedTask")
+      return deletedTask;
+    } catch (error) {
+      console.log(error);
+      return error.message || error;
     }
   };
-  
+
   useEffect(() => {
     taskDataFunc();
-  }, [deletedTaskState]);
-
-  console.log(taskData);
+  }, [deletedTaskState, taskData.length, pathname]);
 
   return (
     <div>
@@ -76,9 +73,8 @@ export const CompletedTask = () => {
                         {taskInfo.description}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        Completed By
-                        - {taskInfo.team == null ? "" : taskInfo.team.name}
-                        {/* - { console.log(taskInfo.team.name=null ? "":taskInfo.team.name ) } */}
+                        Completed By -{" "}
+                        {taskInfo.team == null ? "" : taskInfo.team.name}
                       </Typography>
                     </CardContent>
                     <CardActions>
@@ -93,6 +89,7 @@ export const CompletedTask = () => {
                   </Card>
                 </div>
               ))}
+              {taskData <= 0 && <h1> No Task is completed</h1>}
             </div>
           </div>
         </div>

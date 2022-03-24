@@ -1,5 +1,8 @@
 import axios from "axios";
 import {
+  JOIN_PROJECT_TASK_FAIL,
+  JOIN_PROJECT_TASK_START,
+  JOIN_PROJECT_TASK_SUCCESS,
   PROJECT_GET_FAIL,
   PROJECT_GET_START,
   PROJECT_GET_SUCCESS,
@@ -75,10 +78,37 @@ export const allProjectGet = () => async (dispatch) => {
     });
   }
 };
-
+export const projectRealatedTaskAction =
+  ({ id }) =>
+  async (dispatch) => {
+    await dispatch({
+      type: JOIN_PROJECT_TASK_START,
+    });
+    console.log(id);
+    try {
+      const allTasks = await axios.get(
+        `http://localhost:5000/joinProject/${id}`
+      );
+      console.log(allTasks.data.data);
+      if (allTasks) {
+        return dispatch({
+          type: JOIN_PROJECT_TASK_SUCCESS,
+          payload: allTasks.data.data,
+          loading: false,
+        });
+      }
+    } catch (error) {
+      console.log(error.message || error);
+      return dispatch({
+        type: JOIN_PROJECT_TASK_FAIL,
+        payload: error.message || error,
+        loading: false,
+      });
+    }
+  };
 
 export const projectUpdateSuccess =
-  ({id, project, description, dueDate }) =>
+  ({ id, project, description, dueDate }) =>
   async (dispatch) => {
     debugger;
     console.log(
@@ -86,8 +116,7 @@ export const projectUpdateSuccess =
       id,
       project,
       description,
-      dueDate,
-      
+      dueDate
     );
 
     await dispatch({
