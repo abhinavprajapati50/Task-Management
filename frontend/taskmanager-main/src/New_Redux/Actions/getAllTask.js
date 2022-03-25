@@ -19,33 +19,38 @@ import {
 } from "../ActionTypes";
 
 export const taskActions =
-  ({ task, description, dueDate, Assign_to, project_name }) =>
+  ({ task, description, dueDate, Assign_to }) =>
   async (dispatch) => {
     await dispatch({
       type: TASK_POST_START,
     });
     debugger
-console.log(task, description, dueDate, Assign_to, project_name);
+console.log(task, description, dueDate, Assign_to);
     try {
-      const updateTask = await axios.post(`http://localhost:5000/task`, {
-        task, description, dueDate, Assign_to, project_name
-      });
-      console.log(updateTask);
-      if (updateTask) {
+      let token = localStorage.getItem("token");
+      const addTask = await axios.post(`http://localhost:5000/task`, {
+        task, description, dueDate, Assign_to
+      },
+         { headers: { authorization: token }},
+        
+        // , project_name
+      );
+      console.log(addTask);
+      if (addTask) {
         return dispatch({
           type: TASK_POST_SUCCESS,
-          payload: updateTask.data.data,
+          payload: addTask.data.data,
           loading: false,
         });
       } else {
         return dispatch({
           type: TASK_POST_FAIL,
-          payload: updateTask.data.message,
+          payload: addTask.data.message,
           loading: false,
         });
       }
     } catch (error) {
-      console.log(error.message || error);
+      console.log(error.message );
       return dispatch({
         type: TASK_POST_FAIL,
         payload: error.message || error,
@@ -57,7 +62,6 @@ console.log(task, description, dueDate, Assign_to, project_name);
 export const taskUpdateSuccess =
   ({ id, task, description, dueDate, Assign_to }) =>
   async (dispatch) => {
-    debugger;
     console.log(
       "========------------------------id",
       id,
@@ -105,7 +109,10 @@ export const allTaskGet = () => async (dispatch) => {
     type: TASK_GET_START,
   });
   try {
-    const allTasks = await axios.get(`http://localhost:5000/task`);
+    let token = localStorage.getItem("token");
+
+    const allTasks = await axios.get(`http://localhost:5000/task`, { headers: { authorization: token } });
+    console.log("--------------allTasks=-----=-=-", allTasks);
     if (allTasks) {
       return dispatch({
         type: TASK_GET_SUCCESS,

@@ -98,6 +98,7 @@ console.log("---=-=-=",paramasId);
 
   const handleAllProject = async () => {
     const projectData = await dispatch(allProjectGet());
+    console.log("--------projectData", projectData);
     setallprojects(projectData.payload);
   };
 
@@ -109,7 +110,6 @@ console.log("---=-=-=",paramasId);
       description,
       dueDate: dead_line,
       Assign_to,
-      project_name: projectName,
     };
     console.log("-----------=-=-=taskData-", taskData);
     if (!task || !description || !dead_line) {

@@ -41,7 +41,6 @@ router.post("/projects", projects);
 router.get("/allprojects", AllProjects);
 router.put("/project/edit/:id", updateProject);
 
-
 // ---------TASK
 router.post("/task", task);
 router.get("/task", AllTask);

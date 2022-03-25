@@ -216,8 +216,7 @@ function TaskItem({ setisLoggedIN, setloader }) {
             </div>
             {console.log(allTaskData)}
             {allTaskData.map(
-              (taskInfo) =>
-                taskInfo.status == (selected.id || "0") && (
+              (taskInfo) => (
                   <div className="card_padding" key={taskInfo.id}>
                     {console.log(
                       "---------=============--->>>>",

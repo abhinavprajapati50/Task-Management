@@ -27,22 +27,29 @@ export const teamActions =
     });
 
     try {
-      const updateTask = await axios.post(`http://localhost:5000/team`, {
-        name,
-        gender,
-        work, // task, description, dueDate, Assign_to
-      });
-      console.log("===========UPDTAETASK", updateTask);
-      if (updateTask) {
+      let token = localStorage.getItem("token");
+      const teamData = await axios.post(
+        `http://localhost:5000/team`,
+        {
+          name,
+          gender,
+          work, // task, description, dueDate, Assign_to
+        },
+        {
+          headers: { authorization: token },
+        }
+      );
+      console.log("===========UPDTAETASK", teamData);
+      if (teamData) {
         return dispatch({
           type: TEAM_SUCCESS,
-          payload: updateTask.data.data,
+          payload: teamData.data.data,
           loading: false,
         });
       } else {
         return dispatch({
           type: TEAM_FAIL,
-          payload: updateTask.data.message,
+          payload: teamData.data.message,
           loading: false,
         });
       }
@@ -84,7 +91,12 @@ export const getAllTeamAction = (team) => async (dispatch) => {
     type: GET_TEAM_START,
   });
   try {
-    const allTasks = await axios.get(`http://localhost:5000/team`);
+    let token = localStorage.getItem("token");
+
+    const allTasks = await axios.get(`http://localhost:5000/team`, {
+      headers: { authorization: token },
+    });
+    console.log("-------------------------allTasksallTasks>>>>>>>>>", allTasks);
     if (allTasks) {
       return dispatch({
         type: GET_TEAM_SUCCESS,

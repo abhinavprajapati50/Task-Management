@@ -43,7 +43,7 @@ export const TaskModal = ({ open, setopen }) => {
       description,
       dueDate: dead_line,
       Assign_to,
-      project_name: projectName,
+      // project_name: projectName,
     };
     console.log("-----------=-=-=taskData-", taskData);
     if (!task || !description || !dead_line) {
@@ -174,7 +174,7 @@ export const TaskModal = ({ open, setopen }) => {
             </Select>
             <FormHelperText>Assign to</FormHelperText>
           </FormControl>
-          <FormControl sx={{ minWidth: 515 }}>
+          {/* <FormControl sx={{ minWidth: 515 }}>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -194,7 +194,7 @@ export const TaskModal = ({ open, setopen }) => {
               ))}
             </Select>
             <FormHelperText>Select Project</FormHelperText>
-          </FormControl>
+          </FormControl> */}
         </div>
 
         <Button type="submit" variant="contained">

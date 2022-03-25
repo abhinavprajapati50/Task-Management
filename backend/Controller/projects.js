@@ -1,9 +1,14 @@
+const  jwt_decode  = require("jwt-decode");
 const { Op } = require("sequelize/dist");
 const projectModal = require("../Model/ProjectModal");
 const taskModal = require("../Model/taskModal");
+const User = require("../Model/User");
 
 exports.projects = async (req, res, next) => {
-  const { project, description, dueDate, status, chr_delete} = req.body;
+  const { project, description, dueDate, status, chr_delete } = req.body;
+  let data = req.headers.authorization ;
+      const tokens = jwt_decode(data);
+  
   if (!project || !description || !dueDate) {
     return res
       .status(200)
@@ -16,6 +21,7 @@ exports.projects = async (req, res, next) => {
       dueDate,
       status,
       chr_delete,
+      userId:tokens.id,
     });
     // --
     let resMessage = "Project Created Successfully.";
@@ -35,13 +41,23 @@ exports.projects = async (req, res, next) => {
 };
 
 exports.AllProjects = async (req, res, next) => {
+  const {userId} = req.body;
   try {
+    // let token = req.headers["x-access-token"];
+    // let token = req.body.token || req.query.token || req.headers["x-access-token"];
+    let data = req.headers.authorization;
+    console.log("--------------------------=", data);
+    
+// res.header(data)
+    const tokens = jwt_decode(data);
+    const tokenId = tokens.id
     const all_Projects = await projectModal.findAll({
       order: [["id", "DESC"]],
       include: taskModal,
+      include: User,
       // //   attributes:['id' ]
       where: {
-        status: 0, chr_delete: 0,
+        status: 0, chr_delete:0  ,userId: tokenId 
           // [Op.not]: null
         
        },
@@ -65,8 +81,6 @@ exports.AllProjects = async (req, res, next) => {
 
 exports.updateProject = async (req, res) => {
   const { project, description, dueDate, status } = req.body;
-  console.log("-------------=-=-=>>>>>>>>>>", req.body);
-  console.log("page LENGTH++++++", req.body);
   try {
     const updatedTask = await projectModal.update(
       { project, description, dueDate, status },

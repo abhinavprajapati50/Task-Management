@@ -11,7 +11,7 @@ const compression = require("compression");
 const teamModal = require("./Model/TeamModal");
 const taskModal = require("./Model/taskModal");
 const projectModal = require("./Model/ProjectModal");
-
+const User = require("./Model/User");
 
 require("dotenv").config();
 
@@ -30,8 +30,7 @@ router.use(function (req, res, next) {
     "Access-Control-Allow-Origin",
     "*"
   );
-  // let data = { authorization: req.headers };
-  // res.header(data)
+
   // console.log("---------------------req.headers", data);
   // console.log("---------------------req.headers", daata);
 
@@ -50,21 +49,24 @@ sequelize
     app.listen(process.env.PORT || PORT, () => {
       console.log(`the post is listning on ${PORT}`);
     });
-    teamModal.hasMany(taskModal , { foreignKey: "Assign_to" });    //team arry have task  related foreign key
-    taskModal.belongsTo(teamModal, { foreignKey: "Assign_to" });   //task arry have team related foreign key
+    teamModal.hasMany(taskModal, { foreignKey: "Assign_to" }); //team arry have task  related foreign key
+    taskModal.belongsTo(teamModal, { foreignKey: "Assign_to" }); //task arry have team related foreign key
 
- projectModal.hasMany(taskModal, { foreignKey: "project_name"})
-    
-    
+    projectModal.hasMany(taskModal, { foreignKey: "project_name" });
+
+    // User.hasMany(projectModal, { foreignKey: "userId"})
+    projectModal.belongsTo(User, { foreignKey: "userId" });
+    teamModal.belongsTo(User, { foreignKey: "userId" });
+    taskModal.belongsTo(User, { foreignKey: "userId" });
+
     // teamModal.hasMany(taskModal , { foreignKey: "Assign_to" });
     // taskModal.belongsToMany(teamModal , { foreignKey: "Assign_to" });
-   
 
     taskModal.addScope("checkStatus", {
       where: {
         status: 1,
-        chr_delete:0
-      }
+        chr_delete: 0,
+      },
     });
     // taskModal.addScope("projectTaskCompleted", {
     //   where: {
@@ -72,9 +74,6 @@ sequelize
     //     chr_delete:0
     //   }
     // });
-
-
-
   })
   .catch((err) => {
     console.log("-----err appjs sequlize", err);

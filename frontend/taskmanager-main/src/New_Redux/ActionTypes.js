@@ -28,7 +28,6 @@ export const Update_Project_START = "  Update_Project_START";
 export const Update_Project_SUCCESS = "Update_Project_SUCCESS";
 export const Update_Project_FAIL = "   Update_Project_FAIL";
 
-
 // -----------TASKS
 
 export const UpdateTask_START = "UpdateTask_START";

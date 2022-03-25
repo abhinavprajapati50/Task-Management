@@ -1,5 +1,8 @@
+const  jwt_decode  = require("jwt-decode");
+
 const taskModal = require("../Model/taskModal");
 const teamModal = require("../Model/TeamModal");
+const User = require("../Model/User");
 
 exports.task = async (req, res, next) => {
   const { task, description, dueDate, Assign_to, status, chr_delete, project_name } =
@@ -9,18 +12,29 @@ exports.task = async (req, res, next) => {
       .status(200)
       .json({ status: false, message: "All field required" });
   }
+  let data = req.headers.authorization;
+  // let data = req.headers.authorization;
+  console.log("--------------*************", data);
+  // console.log("--------------*************", req.body);
+  let tokens = jwt_decode(data);
+  // const tokens = jwt_decode(data);
+
+  // console.log(tokens);
+  let tokenId = tokens.id;
   try {
+
     const result_Task = await taskModal.create({
       task,
       description,
       dueDate,
       Assign_to,
-      status,
+      // status,
       chr_delete,
-      project_name
+      // project_name
+      userId:tokenId
     });
-    // --
     let resMessage = "Task Created Successfully.";
+    console.log("============",result_Task);
     // if (result_menu) {
     //   try {
     //     const slugUpdateStatus = await navbarMenu.update(
@@ -71,11 +85,19 @@ exports.task = async (req, res, next) => {
 };
 exports.AllTask = async (req, res, next) => {
   try {
+    let data = req.headers.authorization;
+
+    // console.log("---------------------req.headers", data);
+    const tokens = jwt_decode(data);
+    const tokenId = tokens.id;
+    // console.log("))))))))))))))))))localhost00", tokens);
+    
     const result_Task = await taskModal.findAll({
       order: [["id", "DESC"]],
       include: teamModal,
+      include:User,
       // //   attributes:['id' ]
-      // where: { id: req.body.id },
+      where: { userId: tokenId },
     });
     // --
     let resMessage = "All Task rendered successfully.";
@@ -97,11 +119,11 @@ exports.AllTask = async (req, res, next) => {
 // updateTask
 
 exports.updateTask = async (req, res) => {
-  console.log("-------------=-=-=>>>>>>>>>>", req.body);
+  // console.log("-------------=-=-=>>>>>>>>>>", req.body);
   const { task, description, dueDate, Assign_to, status } = req.body;
 
   // let id = req.params.id;
-  console.log("page LENGTH++++++", req.body);
+  // console.log("page LENGTH++++++", req.body);
 
   try {
     const updatedTask = await taskModal.update(
@@ -113,7 +135,7 @@ exports.updateTask = async (req, res) => {
 
       }
     );
-    console.log(updatedTask);
+    // console.log(updatedTask);
     res.status(200).json({
       status: true,
       message: " task successfully updated",
@@ -138,7 +160,7 @@ exports.getUpdatedTask = async (req, res) => {
         id: req.params.id,
       },
     });
-    console.log(updatedTask);
+    // console.log(updatedTask);
     res.status(200).json({
       status: true,
       message: "Get task successfully updated",
@@ -173,7 +195,7 @@ exports.completedTask = async (req, res, next) => {
       data: comhpletedTask,
     });
   } catch (error) {
-    console.log(error);
+    console.log(error.message || error);
     res.status(500).json({
       status: false,
       message: "Somethings wents wrong",
@@ -200,7 +222,7 @@ exports.deletedTask = async (req, res) => {
       data: deletedTask,
     });
   } catch (error) {
-    console.log("error", error);
+    console.log("error", error.message || error);
     res.status(500).json({
       status: false,
       message: " Somethings wents wrong",

@@ -13,7 +13,10 @@ const teamModal = sequelizeDb.define("team", {
   },
   work: {
     type: Sequelize.STRING,
-  }
+  },
+  userId: {
+    type: Sequelize.INTEGER,
+  },
 });
 
 module.exports = teamModal;

@@ -12,10 +12,10 @@ const projectModal = sequelizeDb.define("projects", {
   dueDate: {
     type: Sequelize.DATE,
   },
-//   Assign_to: {
-//     type: Sequelize.INTEGER,
-//     defaultValue: null
-//   },
+  userId: {
+    type: Sequelize.INTEGER,
+    defaultValue: null
+  },
   status: {
     type: Sequelize.ENUM,
     values: ['pending', 'completed', 'rejected']

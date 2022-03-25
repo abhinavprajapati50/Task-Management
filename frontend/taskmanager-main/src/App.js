@@ -78,13 +78,13 @@ function App() {
                 /> */}
                 <Route path="/task/:id" element={<TaskDetails />} />            
                 <Route path="/newtask" element={<TaskForm />} />
-                <Route path="/newproject" element={<Project_Form />} />
+                {/* <Route path="/newproject" element={<Project_Form />} /> */}
                 <Route path="/edit/:id" element={<TaskUpdateForm />} />
                 <Route path="/project/edit/:id" element={<Project_Form />} />
                 <Route path="/project/add-task/:id" element={<ProjectTasks />} />
-                <Route path="/completedtask" element={<CompletedTask />} />
+                {/* <Route path="/completedtask" element={<CompletedTask />} /> */}
                 <Route path="/team" element={<Team />} />
-                <Route path="/team/:id" element={<TeamDetails />} />
+                <Route path="/team/:id" element={<TeamDetails />} />z
                 {/* <Route path="/task" element={
                     <TaskItem
                       setisLoggedIN={setisLoggedIN}

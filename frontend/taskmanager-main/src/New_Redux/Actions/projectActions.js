@@ -1,4 +1,6 @@
 import axios from "axios";
+import jwt_decode from "jwt-decode";
+
 import {
   JOIN_PROJECT_TASK_FAIL,
   JOIN_PROJECT_TASK_START,
@@ -27,10 +29,14 @@ export const projectActions =
       dueDate
     );
     try {
+      let token = localStorage.getItem('token');
+
       const projectData = await axios.post(`http://localhost:5000/projects`, {
         project,
         description,
         dueDate,
+      }, {
+        headers: { 'authorization': token }
       });
       console.log(projectData);
       if (projectData) {
@@ -61,7 +67,10 @@ export const allProjectGet = () => async (dispatch) => {
     type: PROJECT_GET_START,
   });
   try {
-    const allTasks = await axios.get(`http://localhost:5000/allprojects`);
+     let token = localStorage.getItem("token");
+
+    // console.log("))))))))))))))))))localhost00", tokens);
+    const allTasks = await axios.get(`http://localhost:5000/allprojects`, { headers: { 'authorization': token } });
     if (allTasks) {
       return dispatch({
         type: PROJECT_GET_SUCCESS,

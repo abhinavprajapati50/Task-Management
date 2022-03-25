@@ -27,6 +27,9 @@ const taskModal = sequelizeDb.define("task", {
     // values: ['Pending', 'Completed', 'Rejected']
     // type: Sequelize.Sequelize.ENUM("Pending", "Completed", "Rejected"),
   },
+  userId: {
+    type: Sequelize.INTEGER,
+  },
   chr_delete: {
     type: Sequelize.TINYINT,
   },

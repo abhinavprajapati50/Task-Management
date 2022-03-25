@@ -43,21 +43,21 @@ function MainMenu({ setisLoggedIN }) {
           <Link className="nav-link" to="/project_list">
             <li className="nav-item">Projects</li>
           </Link>
-          <Link className="nav-link" to="/newproject">
+          {/* <Link className="nav-link" to="/newproject">
             <li className="nav-item">Add Project</li>
-          </Link>
-          <Link className="nav-link" to="/task">
+          </Link> */}
+          {/* <Link className="nav-link" to="/task">
             <li className="nav-item">Tasks</li>
-          </Link>
+          </Link> */}
           {/* <Link className="nav-link" to="/newtask">
             <li className="nav-item">Add Task</li>
           </Link> */}
-          <Link className="nav-link" to="/team">
+          {/* <Link className="nav-link" to="/team">
             <li className="nav-item">Team-members</li>
           </Link>
           <Link className="nav-link" to="/completedtask">
             <li className="nav-item">CompletedTask</li>
-          </Link>
+          </Link> */}
           
         </ul>
       </div>

@@ -126,7 +126,7 @@ export const Team = () => {
       gender,
       work: role,
     };
-    if (!fullName || !gender) {
+    if (!fullName || !gender || !role) {
       return toast.error("All Field required !!");
     }
 
@@ -151,6 +151,7 @@ export const Team = () => {
 
   const AllTeamUser = async (e) => {
     const allTask = await dispatch(getAllTeamAction());
+    console.log("--------------", allTask);
     setteam(allTask.payload);
   };
   const fabs = [
@@ -170,6 +171,7 @@ export const Team = () => {
     },
     
   ];
+  console.log("----------------teamteam->>", team);
 
   useEffect(async () => {
     AllTeamUser();
@@ -177,6 +179,10 @@ export const Team = () => {
 
   return (
     <div className="card_Styles">
+       <Fab aria-label="Add" color="primary">
+                  {/* {fab.icon} */}
+                  <AddIcon onClick={handleOpen} />
+          </Fab>
       <div>
         <div className="add_button">
           {/* <Button onClick={handleOpen} variant="contained" color="primary">
@@ -287,10 +293,7 @@ export const Team = () => {
               </div>
             ))}
            
-          <Fab sx={fabStyle} aria-label="Add" color="primary">
-                  {/* {fab.icon} */}
-                  <AddIcon onClick={handleOpen} />
-          </Fab>
+         
         
           </div>
         </div>

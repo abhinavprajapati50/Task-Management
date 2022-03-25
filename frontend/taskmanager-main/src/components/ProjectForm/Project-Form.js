@@ -13,7 +13,7 @@ import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 // import useHistory from "react-router";
-import { useNavigate, useLocation, useParams} from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import "../TaskForm/Task_Form.css";
 // import "./Task_Form.css";
 import axios from "axios";
@@ -21,38 +21,31 @@ import { toast } from "react-toastify";
 import { allTaskGet, taskActions } from "../../New_Redux/Actions/getAllTask";
 import { useDispatch } from "react-redux";
 import { getAllTeamAction } from "../../New_Redux/Actions/TeamActions";
-import { projectActions, projectUpdateSuccess } from "../../New_Redux/Actions/projectActions";
+import { styled, Box } from "@mui/system";
+import ModalUnstyled from "@mui/base/ModalUnstyled";
 
-export const Project_Form = () => {
+import {
+  projectActions,
+  projectUpdateSuccess,
+} from "../../New_Redux/Actions/projectActions";
+
+export const Project_Form = ({ open, setopen, isediting, editData }) => {
   const location = useLocation();
   const params = useParams();
   const navigate = useNavigate();
+  console.log("*********************", editData ? editData.description : "");
   let locatioState = location.state == null;
-  // if (locatioState) {
-  //   navigate("/newproject")
-  // }
-  // console.log(locatioState);
-  // let locatiopathname = location.pathname;
-  // console.log(locatiopathname.includes("project/edit") );
   const [dead_line, setdead_line] = useState(
-    locatioState 
-    ? new Date() 
-      :  location.state.update && location.state.data.dueDate
+    editData ? editData.dueDate : new Date()
   );
-  const [project, setProject] = useState(
-    locatioState 
-    ? "" 
-      : location.state.update && location.state.data.project
-  );
+  const [project, setProject] = useState(editData ? editData.project : "");
   const [description, setDescription] = useState(
-    locatioState 
-    ? ""
-      : location.state.update && location.state.data.description
+    editData ? editData.description : ""
   );
   const [Alltask, setAlltask] = useState([]);
   const [teamData, setteamData] = useState([]);
   const [error, seterror] = useState("");
-  
+
   const dispatch = useDispatch();
   const handleDate = (newValue) => {
     console.log("0-0-0-0-0", newValue.toDateString());
@@ -71,7 +64,7 @@ export const Project_Form = () => {
   const hnadleSubmit = async (e) => {
     e.preventDefault();
     const projectData = {
-      id:params.id,
+      id: editData.id,
       project,
       description,
       dueDate: dead_line,
@@ -80,10 +73,13 @@ export const Project_Form = () => {
       return toast.error("All Fields required !!");
     }
     try {
-      const resultTask =  locatioState ?  await dispatch(projectActions(projectData)) : await dispatch(projectUpdateSuccess(projectData))
+      const resultTask = editData
+        ? await dispatch(projectUpdateSuccess(projectData))
+        : await dispatch(projectActions(projectData));
       seterror(resultTask.payload);
       // resultTask.payload
       //   ? toast.success(resultTask.data.message) &&
+      setopen(false);
       navigate("/project_list") && clearData();
       // : toast.error(resultTask.data.message);
       console.log("-=-=-=-=-=-=resultTask", resultTask);
@@ -100,22 +96,25 @@ export const Project_Form = () => {
   };
 
   const handleEmptyState = () => {
-      if (locatioState) {
-       return clearData();
-      }
-  }
+    if (locatioState) {
+      return clearData();
+    }
+  };
   useEffect(() => {
-    handleAllTeam();
-    handleAllTask();
-    handleEmptyState()
-  }, [location]);
+    // handleAllTeam();
+    // handleAllTask();
+    // handleEmptyState();
+  }, [location, editData]);
 
   return (
     <div>
       <div className="card_Body">
-        <div className="container col-sm-12">
+        <div className="container">
           <div className="addtaskform">
-            <h4 className="mb-4"> {locatioState ? "Add Project" : "Update Project"}</h4>
+            <h4 className="mb-4">
+              {" "}
+              {editData ? "Update Project" : "Add Project"}
+            </h4>
             <div className="error"></div>
             <form
               action="/"
@@ -165,6 +164,13 @@ export const Project_Form = () => {
 
               <Button type="submit" variant="contained">
                 Submit
+              </Button>
+              <Button
+                variant="contained"
+                // onClick={ setopen(!open) }
+                onClick={locatioState ? () => setopen(!open) : navigate(-1)}
+              >
+                Cancel
               </Button>
             </form>
           </div>
