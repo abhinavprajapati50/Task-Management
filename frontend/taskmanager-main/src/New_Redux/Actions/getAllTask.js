@@ -19,17 +19,16 @@ import {
 } from "../ActionTypes";
 
 export const taskActions =
-  ({ task, description, dueDate, Assign_to }) =>
+  ({ task, description, dueDate, Assign_to, project_name }) =>
   async (dispatch) => {
     await dispatch({
       type: TASK_POST_START,
     });
-    debugger
 console.log(task, description, dueDate, Assign_to);
     try {
       let token = localStorage.getItem("token");
       const addTask = await axios.post(`http://localhost:5000/task`, {
-        task, description, dueDate, Assign_to
+        task, description, dueDate, Assign_to, project_name
       },
          { headers: { authorization: token }},
         
@@ -61,16 +60,18 @@ console.log(task, description, dueDate, Assign_to);
 
 export const taskUpdateSuccess =
   ({ id, task, description, dueDate, Assign_to }) =>
-  async (dispatch) => {
-    console.log(
-      "========------------------------id",
+    async (dispatch) => {
+      console.log(
+        "========------------------------id",
       id,
       task,
       description,
       dueDate,
-      Assign_to
-    );
-
+      Assign_to, 
+      
+      );
+      
+      debugger
     await dispatch({
       type: UpdateTask_START,
     });

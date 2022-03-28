@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import "./Team_Details.css";
 import axios from "axios";
-import { getAllTeamAction } from "../../New_Redux/Actions/TeamActions";
+import { getAllTeamAction, getSingleTeamMemberAction } from "../../New_Redux/Actions/TeamActions";
 import { useDispatch } from "react-redux";
 
 export const TeamDetails = () => {
@@ -20,8 +20,8 @@ export const TeamDetails = () => {
   const [allUser, setallUser] = useState([]);
 
   const getAllUser = async () => {
-    const allTeams = await dispatch( getAllTeamAction() )
-    ;
+    const allTeams = await dispatch(getSingleTeamMemberAction());
+    console.log(allTeams);
     setallUser(allTeams.payload);
   };
   useEffect(async () => {
@@ -43,7 +43,7 @@ export const TeamDetails = () => {
               style={{ paddingTop: "2rem", marginTop: "10%" }}
               key={team.id}
             >
-              {/* {console.log("--------=-=",team)} */}
+              {console.log("--------=-=",team.id, paramas.id)}
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                   <h1>{team.name}</h1>

@@ -7,7 +7,8 @@ import { ToastContainer, toast } from "react-toastify";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import "./Taskcss/Task_Item.css";
+import "../TasksList/Taskcss/Task_Item.css";
+// import "./Taskcss/Task_Item.css";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
@@ -29,6 +30,10 @@ import {
 import TaskForm from "../TaskForm/TaskForm";
 import { NavLink } from "react-router-dom";
 import { TaskModal } from "./TaskModal";
+import {
+  projectRealatedTaskAction,
+  projectUpdateSuccess,
+} from "../../New_Redux/Actions/projectActions";
 // import { TaskUpdateForm } from "../TaskForm/TaskUpdateForm";
 
 const fabStyle = {
@@ -67,7 +72,7 @@ const style = {
   bgcolor: "white",
   border: "2px solid #000",
   overflow: "scroll",
-  p: 3,
+  p: 5,
   px: 4,
   pb: 3,
 };
@@ -81,16 +86,24 @@ function TaskItem({ setisLoggedIN, setloader }) {
   const [selected, setSelected] = useState("Pending");
 
   // const [loader, setloader] = useState(false);
-  let [addTask, setaddTask] = useState(false);
+  let [editTask, seteditTask] = useState(false);
+  const [editTaskData, seteditTaskData] = useState(null);
   const navgate = useNavigate();
   const dispatch = useDispatch();
+  const { id } = useParams();
+
+  const paramsId = id;
+  console.log("=============EEditTask", editTask, editTaskData);
 
   const [open, setopen] = useState(false);
 
   const allTaskFuncHandler = async () => {
-    const allTask = await dispatch(allTaskGet());
+    // editTask
+    const allTask = await dispatch(projectRealatedTaskAction({ id: paramsId }));
+    // ? await projectUpdateSuccess(editTaskData)
     // setloader(false);
-    setallTaskData(allTask.payload);
+    console.log("------------------name of tasks", allTask.payload);
+    setallTaskData(allTask.payload.tasks);
   };
 
   const handleDateDDMMYYFormat = (date) => {
@@ -119,7 +132,6 @@ function TaskItem({ setisLoggedIN, setloader }) {
   };
   const handleDeletedTask = async (task) => {
     console.log(task);
-    debugger;
     try {
       const deletedTask = await dispatch(getDeletedTask(task));
       // let deletedTask = await axios.put(
@@ -138,9 +150,11 @@ function TaskItem({ setisLoggedIN, setloader }) {
   };
 
   const editHandler = async (data) => {
-    debugger;
-    console.log("dsffffadfs");
-    return navgate(`/edit/${data.id}`, { state: data });
+    console.log("dsffffadfs", data);
+    setopen(!open);
+    seteditTask(true);
+    seteditTaskData(data);
+    // return navgate(`/edit/${data.id}`, { state: data });
   };
 
   const handleAllTask = async () => {
@@ -182,7 +196,14 @@ function TaskItem({ setisLoggedIN, setloader }) {
         >
           <Box sx={style}>
             {/* <TaskForm open={open} setopen={setopen} /> */}
-            <TaskModal open={open} setopen={setopen} />
+            <TaskModal
+              open={open}
+              setopen={setopen}
+              paramsId={paramsId}
+              editTask={editTask}
+              seteditTask={seteditTask}
+              editTaskData={editTaskData}
+            />
           </Box>
         </StyledModal>
         {/* </div> */}
@@ -199,82 +220,77 @@ function TaskItem({ setisLoggedIN, setloader }) {
                 onChange={(event, value) =>
                   value !== null && setSelected(value)
                 }
+                transformOrigin={{ vertical: "top", horizontal: "center" }}
                 sx={{ width: 300 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Task Action " />
+                  <TextField {...params} label="Task-Filter " />
                 )}
               />
               <Fab
-                      // sx={fabStyle}
-                      aria-label="Add"
-                      color="primary"
-                      onClick={() => setopen(!open)}
-                    >
-                      <AddIcon /> 
+                // sx={fabStyle}
+                aria-label="Add"
+                color="primary"
+                onClick={() => setopen(!open)}
+              >
+                <AddIcon />
               </Fab>
               <h5> Add Task</h5>
             </div>
             {console.log(allTaskData)}
-            {allTaskData.map(
-              (taskInfo) => (
-                  <div className="card_padding" key={taskInfo.id}>
-                    {console.log(
-                      "---------=============--->>>>",
-                      taskInfo && true
-                    )}
-                    <Card className="card" sx={{ width: 345, height: 300 }}>
-                      <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                          {taskInfo.task}
-                        </Typography>
-                        <Typography gutterBottom variant="h5" component="div">
-                          {handleDateDDMMYYFormat(taskInfo.dueDate)}
-                        </Typography>
-                        {/* { console.log(taskInfo.team.id) } */}
-                        <Typography variant="body2" color="text.secondary">
-                          {taskInfo.description}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                        ></Typography>
-                      </CardContent>
-                      <CardActions>
-                        {/* {taskInfo.completed == true && ( */}
-                        <Button
-                          variant="contained"
-                          color="success"
-                          onClick={() => handleCompletedTask(taskInfo)}
-                        >
-                          Complete
-                        </Button>
-                        {/* )} */}
-                        <Button
-                          className="mr-2"
-                          variant="contained"
-                          color="error"
-                          onClick={() => handleDeletedTask(taskInfo)}
-                        >
-                          Delete
-                        </Button>
-                        {/* <Link to={`/edit/${taskInfo.id}`}> */}
-                        <Button
-                          variant="contained"
-                          onClick={() => editHandler(taskInfo)}
-                        >
-                          Edit
-                          <EditIcon />
-                        </Button>
-                        {/* </Link> */}
-                      </CardActions>
-                    </Card>
-                    {/* <NavLink to="/newtask"> */}
+            {allTaskData.map((taskInfo) => (
+              <div className="card_padding" key={taskInfo.id}>
+                {console.log("---------=============--->>>>", taskInfo && true)}
+                <Card className="card" sx={{ width: 345, height: 300 }}>
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {taskInfo.task}
+                    </Typography>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {handleDateDDMMYYFormat(taskInfo.dueDate)}
+                    </Typography>
+                    {/* { console.log(taskInfo.team.id) } */}
+                    <Typography variant="body2" color="text.secondary">
+                      {taskInfo.description}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                    ></Typography>
+                  </CardContent>
+                  <CardActions>
+                    {/* {taskInfo.completed == true && ( */}
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handleCompletedTask(taskInfo)}
+                    >
+                      Complete
+                    </Button>
+                    {/* )} */}
+                    <Button
+                      className="mr-2"
+                      variant="contained"
+                      color="error"
+                      onClick={() => handleDeletedTask(taskInfo)}
+                    >
+                      Delete
+                    </Button>
+                    {/* <Link to={`/edit/${taskInfo.id}`}> */}
+                    <Button
+                      variant="contained"
+                      onClick={() => editHandler(taskInfo)}
+                    >
+                      Edit
+                      <EditIcon />
+                    </Button>
+                    {/* </Link> */}
+                  </CardActions>
+                </Card>
+                {/* <NavLink to="/newtask"> */}
 
-                    
-                    {/* </NavLink> */}
-                  </div>
-                )
-            )}
+                {/* </NavLink> */}
+              </div>
+            ))}
             {allTaskData <= 0 && (
               <>
                 {" "}

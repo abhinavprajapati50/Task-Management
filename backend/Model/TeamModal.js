@@ -17,6 +17,9 @@ const teamModal = sequelizeDb.define("team", {
   userId: {
     type: Sequelize.INTEGER,
   },
+  projectId: {
+    type: Sequelize.INTEGER,
+  },
 });
 
 module.exports = teamModal;

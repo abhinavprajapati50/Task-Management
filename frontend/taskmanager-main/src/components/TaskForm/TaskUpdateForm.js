@@ -48,7 +48,6 @@ export const TaskUpdateForm = () => {
   
 
   const updateHandler = async (e) => {
-    debugger;
     e.preventDefault();
     console.log("-------------updateHandler ---------task", state);
     const user = {

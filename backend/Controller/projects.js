@@ -45,6 +45,7 @@ exports.AllProjects = async (req, res, next) => {
   try {
     // let token = req.headers["x-access-token"];
     // let token = req.body.token || req.query.token || req.headers["x-access-token"];
+    // let data = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTA1LCJlbWFpbCI6Im5pcmFqQGdtYWlsLmNvbSIsInJvbGUiOjEsImlhdCI6MTY0ODQ0NTEzMiwiZXhwIjoxNjQ4NDQ1MTM1fQ.H6XUjl_TZRErmSQXkt6X71uKnEBPUGIxMSclgpWZI8c";
     let data = req.headers.authorization;
     console.log("--------------------------=", data);
     

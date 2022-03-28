@@ -48,7 +48,6 @@ router.put("/task/edit/:id", updateTask);
 router.get("/task/edit/:id", getUpdatedTask);
 router.put("/task/completed/:id", completedTask);
 router.put("/task/deletedtask/:id", deletedTask);
-
 // ------------TEAM
 router.post("/team", team);
 router.get("/team/:id", singleTeamUser);

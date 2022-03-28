@@ -6,6 +6,7 @@ const User = require("../Model/User");
 
 exports.team = async (req, res, next) => {
   //   const { title, slug, description, chr_delete } = req.body;
+  console.log(">>>>>>>>>>>>>>>>>>>>>",req.body.projectId);
   const { name, gender, work } = req.body;
   if (!name || !gender || !work) {
     return res
@@ -15,10 +16,12 @@ exports.team = async (req, res, next) => {
   try {
     let data = req.headers.authorization;
     const tokens = jwt_decode(data);
+    console.log();
     const result_Team = await teamModal.create({
       name,
       gender,
       work,
+      projectId:req.body.projectId,
       userId: tokens.id,
     });
     // --

@@ -98,11 +98,11 @@ export const projectRealatedTaskAction =
       const allTasks = await axios.get(
         `http://localhost:5000/joinProject/${id}`
       );
-      console.log(allTasks.data.data);
+      console.log(allTasks.data.data[0]);
       if (allTasks) {
         return dispatch({
           type: JOIN_PROJECT_TASK_SUCCESS,
-          payload: allTasks.data.data,
+          payload: allTasks.data.data[0],
           loading: false,
         });
       }
@@ -119,7 +119,6 @@ export const projectRealatedTaskAction =
 export const projectUpdateSuccess =
   ({ id, project, description, dueDate }) =>
   async (dispatch) => {
-    debugger;
     console.log(
       "========------------------------id",
       id,

@@ -59,7 +59,6 @@ const style = {
 };
 
 export const Project_List = ({ setisLoggedIN, setloader }) => {
-  // debugger
   const [allTaskData, setallTaskData] = useState([]);
   const [completedTaskState, setcompletedTaskState] = useState(null);
   const [open, setopen] = useState(false);
@@ -99,9 +98,10 @@ export const Project_List = ({ setisLoggedIN, setloader }) => {
     // });
   };
   // console.log("-----editData ------>>>>>>", new Date(),   allTaskData[0].dueDate);
-
   const viewHandler = async (data) => {
-    return navgate(`/project/add-task/${data.id}`, { state: data });
+    console.log("-----------view task");
+    return navgate(`/project/add-task/${data.id}`);
+    // return navgate(`/project/add-task/${data.id}`, { state: data });
 
     // const viewTaskRelatedProject = await dispatch()
   };

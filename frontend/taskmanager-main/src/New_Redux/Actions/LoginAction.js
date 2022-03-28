@@ -6,7 +6,6 @@ export const LoginAction =
   ({ email, password, role }) =>
   async (dispatch) => {
     await dispatch({ type: LOGIN_START });
-    debugger
     try {
       const result = await axios.post("http://localhost:5000/signin", {
         email,

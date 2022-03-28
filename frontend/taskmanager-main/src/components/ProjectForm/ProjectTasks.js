@@ -15,6 +15,8 @@ import { green } from "@mui/material/colors";
 import Box from "@mui/material/Box";
 import { Team } from "../Team/Team";
 import TaskItem from "../TasksList/TaskItem";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -53,9 +55,10 @@ const fabStyle = {
 };
 
 export const ProjectTasks = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const theme = useTheme();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -70,28 +73,29 @@ export const ProjectTasks = () => {
     exit: theme.transitions.duration.leavingScreen,
   };
 
-  const fabs = [
-    {
-      color: "primary",
-      sx: fabStyle,
-      icon: <AddIcon />,
-      label: "Add",
-    },
-    {
-      color: "secondary",
-      sx: fabStyle,
-      icon: <AddIcon />,
-      // icon: <EditIcon />,
-      label: "Add",
-    },
-    // {
-    //   color: "inherit",
-    //   sx: { ...fabStyle, ...fabGreenStyle },
-    //   icon: <UpIcon />,
-    //   label: "Expand",
-    // },
-  ];
+  // const fabs = [
+  //   {
+  //     color: "primary",
+  //     sx: fabStyle,
+  //     icon: <AddIcon />,
+  //     label: "Add",
+  //   },
+  //   {
+  //     color: "secondary",
+  //     sx: fabStyle,
+  //     icon: <AddIcon />,
+  //     // icon: <EditIcon />,
+  //     label: "Add",
+  //   },
+  //   // {
+  //   //   color: "inherit",
+  //   //   sx: { ...fabStyle, ...fabGreenStyle },
+  //   //   icon: <UpIcon />,
+  //   //   label: "Expand",
+  //   // },
+  // ];
 
+  {console.log(":==================prjecty task")}
   return (
     <Box
       sx={{
@@ -122,18 +126,8 @@ export const ProjectTasks = () => {
           <Team />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          {/* <Add_Task /> */}
-          {/* <div className="addmodal">
-            <StyledModal
-              aria-labelledby="unstyled-modal-title"
-              aria-describedby="unstyled-modal-description"
-              open={open}
-              // onClose={handleClose}
-              BackdropComponent={Backdrop}
-            > */}
+
               <TaskItem />
-            {/* </StyledModal>
-          </div> */}
         </TabPanel>
       </SwipeableViews>
     </Box>
@@ -179,7 +173,6 @@ export const ProjectTasks = () => {
 //   };
 
 //   const handleCompletedTask = async (task) => {
-//     debugger;
 //     console.log(task);
 //     try {
 //       const completedTask = await dispatch(completedTaskAction(task));
@@ -215,7 +208,6 @@ export const ProjectTasks = () => {
 //   };
 
 //   const editHandler = async (data) => {
-//     debugger;
 //     console.log("dsffffadfs");
 //     return navgate(`/edit/${data.id}`, { state: data });
 //   };

@@ -25,11 +25,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
   getAllTeamAction,
+  getJoinTeamTaskAction,
   getSingleTeamMemberAction,
   teamActions,
 } from "../../New_Redux/Actions/TeamActions";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { projectRealatedTaskAction } from "../../New_Redux/Actions/projectActions";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,6 +95,7 @@ export const Team = () => {
   const theme = useTheme();
 
   const [open, setOpen] = useState(false);
+  // const [singleTeam, setSingleTeam] = useState(false);
   const [fullName, setFullName] = useState("");
   const [gender, setGender] = useState("");
   const [role, setRole] = useState("");
@@ -99,7 +103,12 @@ export const Team = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const { id } = useParams();
+  const [singleTeamMemberModal, setsingleTeamMemberModal] = useState(false);
+  const [singleTeamMemberData, setsingleTeamMemberData] = useState([]);
+
+  const paramsId = id;
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -108,6 +117,8 @@ export const Team = () => {
   };
   const showTaskHandler = async (id) => {
     console.log("taskHadnler", id);
+    const Tasks = await getJoinTeamTaskAction(id)
+    console.log("==============Tasks",Tasks);
   };
 
   const handleChange = (event, newValue) => {
@@ -119,12 +130,12 @@ export const Team = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    debugger;
-    console.log(fullName, gender);
+    console.log({ fullName, gender, projectId: paramsId });
     const teamDatas = {
       name: fullName,
       gender,
       work: role,
+      projectId: paramsId,
     };
     if (!fullName || !gender || !role) {
       return toast.error("All Field required !!");
@@ -137,22 +148,32 @@ export const Team = () => {
     console.log(result);
     handleClose();
   };
-
-  const singleUserHandler = async (teamId) => {
-    const singleUser = await dispatch(getSingleTeamMemberAction(teamId));
-    navigate(`/team/${singleUser.payload.id}`);
+  const toggleSingleTeamMember = () => {
+    setsingleTeamMemberModal(!singleTeamMemberModal);
   };
 
+  const singleUserHandler = async (teamId) => {
+    // toggleSingleTeamMember()
+    const singleUser = await dispatch(getSingleTeamMemberAction(teamId));
+    setsingleTeamMemberModal(true);
+    console.log(singleUser.payload);
+    setsingleTeamMemberData(singleUser.payload);
+
+    // navigate(`/team/${singleUser.payload.id}`);
+  };
+  // console.log("-------------=-=-=singleUser", singleTeamMemberData);
+
   const clearState = (e) => {
-    setFullName("");
-    setGender("");
-    setRole("");
+    // setFullName("");
+    // setGender("");
+    // setRole("");
   };
 
   const AllTeamUser = async (e) => {
-    const allTask = await dispatch(getAllTeamAction());
-    console.log("--------------", allTask);
-    setteam(allTask.payload);
+    // const allTask = await dispatch(getAllTeamAction());
+    const allTask = await dispatch(projectRealatedTaskAction({ id: paramsId }));
+    console.log("--------------", allTask.payload.teams);
+    setteam(allTask.payload.teams);
   };
   const fabs = [
     {
@@ -169,21 +190,43 @@ export const Team = () => {
       //   icon: <UpIcon />,
       label: "Add",
     },
-    
   ];
-  console.log("----------------teamteam->>", team);
 
   useEffect(async () => {
     AllTeamUser();
-  }, [fullName]);
+    // singleUserHandler();
+  }, [fullName, singleTeamMemberData]);
 
   return (
     <div className="card_Styles">
-       <Fab aria-label="Add" color="primary">
-                  {/* {fab.icon} */}
-                  <AddIcon onClick={handleOpen} />
-          </Fab>
+      <Fab aria-label="Add" color="primary">
+        {/* {fab.icon} */}
+        <AddIcon onClick={handleOpen} />
+      </Fab>
       <div>
+        <StyledModal
+          aria-labelledby="unstyled-modal-titles"
+          aria-describedby="unstyled-modal-description"
+          open={singleTeamMemberModal}
+          onClose={toggleSingleTeamMember}
+          BackdropComponent={Backdrop}
+        >
+          <Box sx={style}>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                <h1>{singleTeamMemberData.name}</h1>
+              </Typography>
+              <Typography gutterBottom variant="h5" component="div">
+                <h2>{singleTeamMemberData.gender}</h2>
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                <h1> {singleTeamMemberData.work}</h1>
+              </Typography>
+            </CardContent>
+            <Button onClick={toggleSingleTeamMember}>Cancel</Button>
+            {/* {singleTeamMemberData} */}
+          </Box>
+        </StyledModal>
         <div className="add_button">
           {/* <Button onClick={handleOpen} variant="contained" color="primary">
             {" "}
@@ -292,9 +335,13 @@ export const Team = () => {
                 </Card>
               </div>
             ))}
-           
-         
-        
+            {team <= 0 && (
+              <>
+                {" "}
+                <h2 style={{ color: "red" }}>No Team Member Found !!</h2>
+                <h3 style={{ color: "gray" }}> Please add the Team Member</h3>
+              </>
+            )}
           </div>
         </div>
       </div>

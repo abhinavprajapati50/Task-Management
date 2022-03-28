@@ -53,6 +53,7 @@ sequelize
     taskModal.belongsTo(teamModal, { foreignKey: "Assign_to" }); //task arry have team related foreign key
 
     projectModal.hasMany(taskModal, { foreignKey: "project_name" });
+    projectModal.hasMany(teamModal, { foreignKey: "ProjectId" });
 
     // User.hasMany(projectModal, { foreignKey: "userId"})
     projectModal.belongsTo(User, { foreignKey: "userId" });

@@ -19,13 +19,12 @@ import {
 } from "../ActionTypes";
 
 export const teamActions =
-  ({ name, gender, work }) =>
-  // ({ task, description, dueDate, Assign_to }) =>
-  async (dispatch) => {
+({ name, gender, work,projectId }) =>
+// ({ task, description, dueDate, Assign_to }) =>
+async (dispatch) => {
     await dispatch({
       type: TEAM_START,
     });
-
     try {
       let token = localStorage.getItem("token");
       const teamData = await axios.post(
@@ -34,6 +33,7 @@ export const teamActions =
           name,
           gender,
           work, // task, description, dueDate, Assign_to
+          projectId
         },
         {
           headers: { authorization: token },
@@ -69,14 +69,14 @@ export const getSingleTeamMemberAction = (teamId) => async (dispatch) => {
   });
   try {
     const allTasks = await axios.get(`http://localhost:5000/team/${teamId}`);
-    console.log(allTasks);
-    if (allTasks) {
+    console.log(allTasks.data.data);
+    // if (allTasks) {
       return dispatch({
         type: SIGLE_TEAM_MEMBER_SUCCESS,
         payload: allTasks.data.data,
         loading: false,
       });
-    }
+    // }
   } catch (error) {
     console.log(error.message || error);
     return dispatch({

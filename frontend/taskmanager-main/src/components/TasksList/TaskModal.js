@@ -14,56 +14,89 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { allTaskGet, taskActions } from "../../New_Redux/Actions/getAllTask";
+import { allTaskGet, taskActions, taskUpdateSuccess } from "../../New_Redux/Actions/getAllTask";
 import { useEffect } from "react";
 import { getAllTeamAction } from "../../New_Redux/Actions/TeamActions";
-import { allProjectGet } from "../../New_Redux/Actions/projectActions";
+import {
+  allProjectGet,
+  projectRealatedTaskAction,
+} from "../../New_Redux/Actions/projectActions";
 import Button from "@mui/material/Button";
 
-export const TaskModal = ({ open, setopen }) => {
+export const TaskModal = ({
+  open,
+  setopen,
+  paramsId,
+  editTaskData,
+  editTask,
+  seteditTask,
+}) => {
+  //   Assign_to: 43
+  // description: "add create shoes crud to user can crud and filter the product"
+  // dueDate: "2022-03-28T06:51:27.000Z"
+  // project_name: 43
+  // task:
   const navigate = useNavigate();
-  const [dead_line, setdead_line] = useState(new Date());
-  const [Assign_to, setAssign_to] = useState(null);
-  const [task, setTask] = useState("");
+  const [dead_line, setdead_line] = useState(
+    editTask ? editTaskData.dueDate : new Date()
+  );
+  const [Assign_to, setAssign_to] = useState(
+    editTask ? editTaskData.Assign_to : null
+  );
+  const [description, setDescription] = useState(
+    editTask ? editTaskData.description : ""
+  );
+  const [task, setTask] = useState(editTask ? editTaskData.task : "");
   const [Alltask, setAlltask] = useState([]);
-  const [description, setDescription] = useState("");
   const [teamData, setteamData] = useState([]);
   const [error, seterror] = useState("");
   const [allProjects, setallprojects] = useState([]);
   const [projectName, setprojectName] = useState(null);
-    const dispatch = useDispatch();
-    const {id} = useParams()
-    console.log("---=-=-=",id);
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  // console.log("---=-=-=", id);
+  // const { id } = useParams();
+  // const paramsId = id;
 
+  console.log("-----------=-=-=editTaskData-", editTaskData);
   const hnadleSubmit = async (e) => {
-    debugger;
     e.preventDefault();
+    debugger
     const taskData = {
+      id: editTaskData.id,
       task,
       description,
       dueDate: dead_line,
       Assign_to,
-      // project_name: projectName,
+      project_name: paramsId,
     };
-    console.log("-----------=-=-=taskData-", taskData);
+    console.log(taskData);
     if (!task || !description || !dead_line) {
       return toast.error("All Fields required !!");
     }
     try {
-      const resultTask = await dispatch(taskActions(taskData));
+      console.log(editTask);
+      const resultTask = editTask
+        ? await dispatch(taskUpdateSuccess(taskData))
+        : await dispatch(dispatch(taskActions(taskData)))
       console.log(resultTask);
-
+      seteditTask(false);
       seterror(resultTask.payload);
       // resultTask.payload
       //   ? toast.success(resultTask.data.message) &&
-        navigate(`/project/add-task/${id}`) && clearData();
-        setopen(false)
+      navigate(`/project/add-task/${id}`) && clearData();
+      setopen(false);
       // : toast.error(resultTask.data.message);
       console.log("-=-=-=-=-=-=resultTask", resultTask);
     } catch (error) {
       toast.error(error.message);
       console.log(error.message || error);
     }
+  };
+
+  const closeMmodalHandler = () => {
+    setopen(false);
+    seteditTask(false);
   };
 
   const handleChange = (event) => {
@@ -74,10 +107,13 @@ export const TaskModal = ({ open, setopen }) => {
     setdead_line(newValue.toDateString());
   };
   const handleAllTeam = async () => {
-    const teamData = await dispatch(getAllTeamAction());
-
+    // const teamData = await dispatch(getAllTeamAction());
+    const teamData = await dispatch(
+      projectRealatedTaskAction({ id: paramsId })
+    );
+    console.log("-------------->>", teamData.payload);
     // const teamData = await axios.get("http://localhost:5000/team");
-    setteamData(teamData.payload);
+    setteamData(teamData.payload.teams);
   };
 
   const handleAllTask = async () => {
@@ -96,18 +132,22 @@ export const TaskModal = ({ open, setopen }) => {
     setTask("");
     setDescription("");
   };
-  console.log("________",Alltask.length);
+  console.log("________", Alltask.length);
   useEffect(() => {
     handleAllTeam();
     handleAllTask();
     handleAllProject();
+    console.log("----------------editTaskData>>>>>>>", editTaskData.dueDate,
+    editTaskData.Assign_to    ,
+    editTaskData.description,
+    editTaskData.task);
     // allProjectGet
   }, [task, description]);
 
   return (
     <div>
       {" "}
-      <h1> Add Task</h1>
+      <h1> {editTask ? "Edit Task" : "Add Task"}</h1>
       <form
         action="/"
         // method="post"
@@ -200,7 +240,12 @@ export const TaskModal = ({ open, setopen }) => {
         <Button type="submit" variant="contained">
           Submit
         </Button>
-        <Button type="button" style={{marginLeft: "1rem"}}  variant="contained" onClick={() => setopen(false)}>
+        <Button
+          type="button"
+          style={{ marginLeft: "1rem" }}
+          variant="contained"
+          onClick={closeMmodalHandler}
+        >
           Cancel
         </Button>
       </form>
