@@ -55,6 +55,7 @@ export const TeamDetails = () => {
                   <h1> {team.work}</h1>
                 </Typography>
               </CardContent>
+              
             </Card>
           ) : (
             ""

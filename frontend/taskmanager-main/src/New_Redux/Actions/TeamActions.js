@@ -16,6 +16,9 @@ import {
   COMPLETED_TASK_START,
   COMPLETED_TASK_SUCCESS,
   COMPLETED_TASK_FAIL,
+  DELETE_TEAM_START,
+  DELETE_TEAM_SUCCESS,
+  DELETE_TEAM_FAIL,
 } from "../ActionTypes";
 
 export const teamActions =
@@ -164,6 +167,36 @@ export const getCompletedTaskAction = (id) => async (dispatch) => {
     });
   }
 };
+
+// deleteTeamReducer
+
+export const deleteTeamMemberAction = (team) => async (dispatch) => {
+  await dispatch({
+    type: DELETE_TEAM_START,
+  });
+  try {
+    console.log(team);
+    const allTeams = await axios.delete(
+      `http://localhost:5000/team/deletedteam/${team.id}`
+    );
+    console.log("--------deleteteaam", allTeams);
+    if (allTeams) {
+      return dispatch({
+        type: DELETE_TEAM_SUCCESS,
+        payload: allTeams.data.data,
+        loading: false,
+      });
+    }
+  } catch (error) {
+    console.log(error.message || error);
+    return dispatch({
+      type: DELETE_TEAM_FAIL,
+      payload: error.message || error,
+      loading: false,
+    });
+  }
+};
+
 
 // export const getEditTask = (task) => async (dispatch) => {
 //   await dispatch({

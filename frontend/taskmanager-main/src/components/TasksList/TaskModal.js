@@ -14,7 +14,11 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { allTaskGet, taskActions, taskUpdateSuccess } from "../../New_Redux/Actions/getAllTask";
+import {
+  allTaskGet,
+  taskActions,
+  taskUpdateSuccess,
+} from "../../New_Redux/Actions/getAllTask";
 import { useEffect } from "react";
 import { getAllTeamAction } from "../../New_Redux/Actions/TeamActions";
 import {
@@ -52,40 +56,56 @@ export const TaskModal = ({
   const [error, seterror] = useState("");
   const [allProjects, setallprojects] = useState([]);
   const [projectName, setprojectName] = useState(null);
+  const [status, setstatus] = useState(0);
+
   const dispatch = useDispatch();
   const { id } = useParams();
   // console.log("---=-=-=", id);
   // const { id } = useParams();
   // const paramsId = id;
 
-  console.log("-----------=-=-=editTaskData-", editTaskData);
   const hnadleSubmit = async (e) => {
     e.preventDefault();
-    debugger
     const taskData = {
-      id: editTaskData.id,
+      // id:  editTaskData.id,
       task,
       description,
       dueDate: dead_line,
       Assign_to,
       project_name: paramsId,
+      // status,
     };
-    console.log(taskData);
     if (!task || !description || !dead_line) {
       return toast.error("All Fields required !!");
     }
+    console.log(Assign_to ? true : false);
+    if (Assign_to !== null) {
+      console.log("--=--=-=-=-=-=-=-=-=-=-====-=-set", status);
+      setstatus(1);
+      console.log("setstatus", status);
+    }
+    console.log("status", status);
     try {
-      console.log(editTask);
-      const resultTask = editTask
-        ? await dispatch(taskUpdateSuccess(taskData))
-        : await dispatch(dispatch(taskActions(taskData)))
+      let resultTask = editTask
+        ? await dispatch(
+            taskUpdateSuccess({
+              id: editTaskData.id,
+              task,
+              description,
+              dueDate: dead_line,
+              Assign_to,
+              project_name: paramsId,
+              status,
+            })
+          )
+        : await dispatch(taskActions(taskData));
       console.log(resultTask);
+      setopen(false);
       seteditTask(false);
       seterror(resultTask.payload);
       // resultTask.payload
-      //   ? toast.success(resultTask.data.message) &&
+      // toast.success(resultTask.data.message);
       navigate(`/project/add-task/${id}`) && clearData();
-      setopen(false);
       // : toast.error(resultTask.data.message);
       console.log("-=-=-=-=-=-=resultTask", resultTask);
     } catch (error) {
@@ -124,6 +144,7 @@ export const TaskModal = ({
   const handleAllProject = async () => {
     const projectData = await dispatch(allProjectGet());
     setallprojects(projectData.payload);
+
   };
 
   const clearData = () => {
@@ -137,12 +158,13 @@ export const TaskModal = ({
     handleAllTeam();
     handleAllTask();
     handleAllProject();
-    console.log("----------------editTaskData>>>>>>>", editTaskData.dueDate,
-    editTaskData.Assign_to    ,
-    editTaskData.description,
-    editTaskData.task);
+    
+    // console.log("----------------editTaskData>>>>>>>", editTaskData,
+    // editTaskData.Assign_to    ,
+    // editTaskData.description,
+    // editTaskData.task);
     // allProjectGet
-  }, [task, description]);
+  }, [task, description, status]);
 
   return (
     <div>

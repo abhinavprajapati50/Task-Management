@@ -17,24 +17,34 @@ import {
   UpdateTask_START,
   UpdateTask_SUCCESS,
 } from "../ActionTypes";
+import { toast } from "react-toastify";
 
 export const taskActions =
-  ({ task, description, dueDate, Assign_to, project_name }) =>
+  ({ task, description, dueDate, Assign_to, project_name, status }) =>
   async (dispatch) => {
     await dispatch({
       type: TASK_POST_START,
     });
-console.log(task, description, dueDate, Assign_to);
+    console.log(task, description, dueDate, Assign_to, project_name, status);
+    debugger;
     try {
       let token = localStorage.getItem("token");
-      const addTask = await axios.post(`http://localhost:5000/task`, {
-        task, description, dueDate, Assign_to, project_name
-      },
-         { headers: { authorization: token }},
-        
+      const addTask = await axios.post(
+        `http://localhost:5000/task`,
+        {
+          task,
+          description,
+          dueDate,
+          Assign_to,
+          project_name,
+          status,
+        },
+        { headers: { authorization: token } }
+
         // , project_name
       );
       console.log(addTask);
+      toast.success(addTask.data.message);
       if (addTask) {
         return dispatch({
           type: TASK_POST_SUCCESS,
@@ -49,7 +59,7 @@ console.log(task, description, dueDate, Assign_to);
         });
       }
     } catch (error) {
-      console.log(error.message );
+      console.log(error.message);
       return dispatch({
         type: TASK_POST_FAIL,
         payload: error.message || error,
@@ -59,19 +69,8 @@ console.log(task, description, dueDate, Assign_to);
   };
 
 export const taskUpdateSuccess =
-  ({ id, task, description, dueDate, Assign_to }) =>
-    async (dispatch) => {
-      console.log(
-        "========------------------------id",
-      id,
-      task,
-      description,
-      dueDate,
-      Assign_to, 
-      
-      );
-      
-      debugger
+  ({ id, task, description, dueDate, Assign_to, status }) =>
+  async (dispatch) => {
     await dispatch({
       type: UpdateTask_START,
     });
@@ -79,13 +78,14 @@ export const taskUpdateSuccess =
     try {
       const updateTask = await axios.put(
         `http://localhost:5000/task/edit/${id}`,
-        { task, description, dueDate, Assign_to }
+        { task, description, dueDate, Assign_to, status }
       );
       console.log("----updateTask-----=-==", updateTask);
       if (updateTask) {
+        toast.success(updateTask.data.message);
         return dispatch({
           type: UpdateTask_SUCCESS,
-          payload: updateTask.data.data ? updateTask.data.data : "",
+          payload: updateTask.data.data,
           loading: false,
         });
       } else {
@@ -112,7 +112,9 @@ export const allTaskGet = () => async (dispatch) => {
   try {
     let token = localStorage.getItem("token");
 
-    const allTasks = await axios.get(`http://localhost:5000/task`, { headers: { authorization: token } });
+    const allTasks = await axios.get(`http://localhost:5000/task`, {
+      headers: { authorization: token },
+    });
     console.log("--------------allTasks=-----=-=-", allTasks);
     if (allTasks) {
       return dispatch({

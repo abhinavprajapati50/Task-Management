@@ -19,12 +19,40 @@
 //   allService,
 // } = require("../Controller/adminServices");
 const upload = require("../imageuploader");
-const { signUpRoute, signin } = require("../Controller/userController");
-const { task, AllTask, completedTask, RejectedTask, deletedTask, updateTask, getUpdatedTask } = require("../Controller/task");
-const { team, Allteam, singleTeamUser,  } = require("../Controller/Team");
+const {
+  signUpRoute,
+  signin,
+  signinData,
+} = require("../Controller/userController");
+const {
+  task,
+  AllTask,
+  completedTask,
+  RejectedTask,
+  deletedTask,
+  updateTask,
+  getUpdatedTask,
+  taskFilter,
+  taskById,
+} = require("../Controller/task");
+const {
+  team,
+  Allteam,
+  singleTeamUser,
+  deletedTeamMember,
+} = require("../Controller/Team");
 const authExisting = require("../Middleware/authUser");
-const { joinTeamTask, scopes, completedTaskApi, joinProjectTask } = require("../JOIN TABLE/join");
-const { projects, AllProjects, updateProject } = require("../Controller/projects");
+const {
+  joinTeamTask,
+  scopes,
+  completedTaskApi,
+  joinProjectTask,
+} = require("../JOIN TABLE/join");
+const {
+  projects,
+  AllProjects,
+  updateProject,
+} = require("../Controller/projects");
 
 const router = require("express").Router();
 
@@ -33,9 +61,9 @@ router.get("/", (req, res) => {
 });
 
 // ------USER
-router.post("/signup", [authExisting.checkEmail] , signUpRoute);
+router.post("/signup", [authExisting.checkEmail], signUpRoute);
 router.post("/signin", signin);
-
+router.get("/signed-data", signinData);
 // --------Projects
 router.post("/projects", projects);
 router.get("/allprojects", AllProjects);
@@ -43,7 +71,10 @@ router.put("/project/edit/:id", updateProject);
 
 // ---------TASK
 router.post("/task", task);
+router.put("/taskfilter", taskFilter);
 router.get("/task", AllTask);
+// router.get("/tasks", taskById);
+
 router.put("/task/edit/:id", updateTask);
 router.get("/task/edit/:id", getUpdatedTask);
 router.put("/task/completed/:id", completedTask);
@@ -52,14 +83,12 @@ router.put("/task/deletedtask/:id", deletedTask);
 router.post("/team", team);
 router.get("/team/:id", singleTeamUser);
 router.get("/team", Allteam);
+router.delete("/team/deletedteam/:id", deletedTeamMember);
 
 // --------------- JOIN
 router.get("/joinTeamTask/:id", joinTeamTask);
 router.get("/completedTask", completedTaskApi);
 router.get("/joinProject/:id", joinProjectTask);
-
-
-
 
 // -----------------------------MENU
 

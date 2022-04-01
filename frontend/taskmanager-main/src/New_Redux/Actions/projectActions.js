@@ -1,5 +1,4 @@
 import axios from "axios";
-import jwt_decode from "jwt-decode";
 
 import {
   JOIN_PROJECT_TASK_FAIL,
@@ -29,15 +28,19 @@ export const projectActions =
       dueDate
     );
     try {
-      let token = localStorage.getItem('token');
+      let token = localStorage.getItem("token");
 
-      const projectData = await axios.post(`http://localhost:5000/projects`, {
-        project,
-        description,
-        dueDate,
-      }, {
-        headers: { 'authorization': token }
-      });
+      const projectData = await axios.post(
+        `http://localhost:5000/projects`,
+        {
+          project,
+          description,
+          dueDate,
+        },
+        {
+          headers: { authorization: token },
+        }
+      );
       console.log(projectData);
       if (projectData) {
         return dispatch({
@@ -67,10 +70,13 @@ export const allProjectGet = () => async (dispatch) => {
     type: PROJECT_GET_START,
   });
   try {
-     let token = localStorage.getItem("token");
+    let token = localStorage.getItem("token");
 
     // console.log("))))))))))))))))))localhost00", tokens);
-    const allTasks = await axios.get(`http://localhost:5000/allprojects`, { headers: { 'authorization': token } });
+    const allTasks = await axios.get(`http://localhost:5000/allprojects`, {
+      headers: { authorization: token },
+    });
+    console.log("-----------------zxxx", allTasks);
     if (allTasks) {
       return dispatch({
         type: PROJECT_GET_SUCCESS,
@@ -119,6 +125,8 @@ export const projectRealatedTaskAction =
 export const projectUpdateSuccess =
   ({ id, project, description, dueDate }) =>
   async (dispatch) => {
+    debugger;
+    console.log(description, dueDate, project);
     console.log(
       "========------------------------id",
       id,

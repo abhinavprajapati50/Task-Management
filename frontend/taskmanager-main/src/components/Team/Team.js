@@ -19,11 +19,13 @@ import AddIcon from "@mui/icons-material/Add";
 import Fab from "@mui/material/Fab";
 import Zoom from "@mui/material/Zoom";
 import { useTheme } from "@mui/material/styles";
+import   jwt_decode  from  "jwt-decode";
 
 import FormLabel from "@mui/material/FormLabel";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
+  deleteTeamMemberAction,
   getAllTeamAction,
   getJoinTeamTaskAction,
   getSingleTeamMemberAction,
@@ -99,7 +101,9 @@ export const Team = () => {
   const [fullName, setFullName] = useState("");
   const [gender, setGender] = useState("");
   const [role, setRole] = useState("");
+  const [roleData, setRoleData] = useState(null);
   const [team, setteam] = useState([]);
+  const [deleteTeam, setDeleteTeam] = useState(null);
   const classes = useStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -117,8 +121,8 @@ export const Team = () => {
   };
   const showTaskHandler = async (id) => {
     console.log("taskHadnler", id);
-    const Tasks = await getJoinTeamTaskAction(id)
-    console.log("==============Tasks",Tasks);
+    const Tasks = await getJoinTeamTaskAction(id);
+    console.log("==============Tasks", Tasks);
   };
 
   const handleChange = (event, newValue) => {
@@ -163,16 +167,39 @@ export const Team = () => {
   };
   // console.log("-------------=-=-=singleUser", singleTeamMemberData);
 
+  const handleDeleteTeam = async (team) => {
+    console.log(team);
+    try {
+      const deletedTeam = await dispatch(deleteTeamMemberAction(team));
+      // let deletedTask = await axios.put(
+      //   `http://localhost:5000/task/deletedtask/${task.id}`
+      // );
+      console.log(deletedTeam);
+      setDeleteTeam(deletedTeam);
+      if (deletedTeam) {
+        return toast.dismiss("task is deletedTeam successfully");
+      }
+      // navgate("/task");
+      return deletedTeam;
+    } catch (error) {
+      console.log(error || error.message);
+    }
+  };
+  
+
   const clearState = (e) => {
-    // setFullName("");
-    // setGender("");
-    // setRole("");
+    setFullName("");
+    setGender("");
+    setRole("");
   };
 
   const AllTeamUser = async (e) => {
-    // const allTask = await dispatch(getAllTeamAction());
+    const allTeams = await dispatch(getAllTeamAction());
     const allTask = await dispatch(projectRealatedTaskAction({ id: paramsId }));
-    console.log("--------------", allTask.payload.teams);
+    console.log("------------->>>-", roleData);
+    const localStorageData = localStorage.getItem("token")
+    const jwtDecodeData = jwt_decode(localStorageData)
+    setRoleData(jwtDecodeData.role);
     setteam(allTask.payload.teams);
   };
   const fabs = [
@@ -195,14 +222,16 @@ export const Team = () => {
   useEffect(async () => {
     AllTeamUser();
     // singleUserHandler();
-  }, [fullName, singleTeamMemberData]);
+  }, [fullName, deleteTeam]);
 
   return (
     <div className="card_Styles">
-      <Fab aria-label="Add" color="primary">
-        {/* {fab.icon} */}
-        <AddIcon onClick={handleOpen} />
-      </Fab>
+      {roleData == 1 && (
+        <Fab aria-label="Add" color="primary">
+          {/* {fab.icon} */}
+          <AddIcon onClick={handleOpen} />
+        </Fab>
+      )}
       <div>
         <StyledModal
           aria-labelledby="unstyled-modal-titles"
@@ -321,16 +350,20 @@ export const Team = () => {
                       onClick={() => {
                         singleUserHandler(team.id);
                       }}
+                      variant="contained"
                     >
                       View
                     </Button>
                     {/* </Link> */}
 
                     <Link to={`/task/${team.id}`}>
-                      <Button onClick={() => showTaskHandler(team.id)}>
+                      <Button variant="contained" color="secondary" onClick={() => showTaskHandler(team.id)}>
                         Task Details
                       </Button>
                     </Link>
+                      {roleData == 1 &&  <Button variant="contained" color="error" onClick={() => handleDeleteTeam(team)}>
+                        Delete
+                      </Button>}
                   </CardContent>
                 </Card>
               </div>

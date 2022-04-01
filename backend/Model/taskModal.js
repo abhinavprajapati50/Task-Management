@@ -13,17 +13,16 @@ const taskModal = sequelizeDb.define("task", {
     type: Sequelize.DATE,
   },
   Assign_to: {
-    type: Sequelize.INTEGER,
-    defaultValue: null
+    type: Sequelize.INTEGER
   },
   project_name: {
     type: Sequelize.INTEGER,
     defaultValue: null
   },
   status: {
-    type: Sequelize.ENUM,
+    type: Sequelize.INTEGER,
     // type: Sequelize.ENUM('Pending', 'Completed', 'Rejected')
-    values: ['pending', 'completed', 'rejected']
+    // values: ['pending', 'completed', 'rejected']
     // values: ['Pending', 'Completed', 'Rejected']
     // type: Sequelize.Sequelize.ENUM("Pending", "Completed", "Rejected"),
   },

@@ -35,7 +35,7 @@ exports.joinProjectTask = async (req, res, next) => {
       // include: teamModal,
       // [Op.not]: null,
       where: { id: req.params.id, status:0, chr_delete:0 },
-      //   attributes:['id' ]
+      //   6ibutes:['id' ]
     });
     console.log(result_Team);
     // --

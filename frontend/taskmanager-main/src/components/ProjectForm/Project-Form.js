@@ -25,6 +25,7 @@ import { styled, Box } from "@mui/system";
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 
 import {
+  allProjectGet,
   projectActions,
   projectUpdateSuccess,
 } from "../../New_Redux/Actions/projectActions";
@@ -33,7 +34,6 @@ export const Project_Form = ({ open, setopen, isediting, editData }) => {
   const location = useLocation();
   const params = useParams();
   const navigate = useNavigate();
-  console.log("*********************", editData ? editData.description : "");
   let locatioState = location.state == null;
   const [dead_line, setdead_line] = useState(
     editData ? editData.dueDate : new Date()
@@ -45,7 +45,9 @@ export const Project_Form = ({ open, setopen, isediting, editData }) => {
   const [Alltask, setAlltask] = useState([]);
   const [teamData, setteamData] = useState([]);
   const [error, seterror] = useState("");
-
+  const [projectData, setprojectData] = useState([]);
+  const [projectRole, setprojectRole] = useState(null)
+  
   const dispatch = useDispatch();
   const handleDate = (newValue) => {
     console.log("0-0-0-0-0", newValue.toDateString());
@@ -54,7 +56,19 @@ export const Project_Form = ({ open, setopen, isediting, editData }) => {
   const handleAllTeam = async () => {
     const teamData = await dispatch(getAllTeamAction());
     setteamData(teamData.payload);
+    const projects = await dispatch(allProjectGet());
+    console.log("--------projectData", projects.payload);
+    
+    setprojectData(projects.payload);
   };
+  
+  const handleAllProject = async () => {
+    // setprojectRole
+    // console.log("(((((((((((((((((((((((", projectData[0].signUpUser.role);
+
+  
+  };
+
 
   const handleAllTask = async () => {
     const taskData = await dispatch(allTaskGet());
@@ -63,18 +77,27 @@ export const Project_Form = ({ open, setopen, isediting, editData }) => {
 
   const hnadleSubmit = async (e) => {
     e.preventDefault();
+    debugger;
     const projectData = {
-      id: editData.id,
       project,
       description,
       dueDate: dead_line,
     };
+    console.log(projectData);
     if (!project || !description || !dead_line) {
       return toast.error("All Fields required !!");
     }
     try {
+      // console.log({ projectData, id: editData.id });
       const resultTask = editData
-        ? await dispatch(projectUpdateSuccess(projectData))
+      ? await dispatch(
+        projectUpdateSuccess({
+              project,
+              description,
+              dueDate: dead_line,
+              id: editData.id,
+            })
+          )
         : await dispatch(projectActions(projectData));
       seterror(resultTask.payload);
       // resultTask.payload
@@ -88,8 +111,9 @@ export const Project_Form = ({ open, setopen, isediting, editData }) => {
       console.log(error.message || error);
     }
   };
-
+  
   const clearData = () => {
+    // console.log("*********************",  projectData);
     setdead_line(new Date());
     setProject("");
     setDescription("");
@@ -100,11 +124,15 @@ export const Project_Form = ({ open, setopen, isediting, editData }) => {
       return clearData();
     }
   };
+
+  console.log(projectData);
   useEffect(() => {
-    // handleAllTeam();
+    handleAllTeam();
+    handleAllProject()
     // handleAllTask();
     // handleEmptyState();
-  }, [location, editData]);
+  }, [open, projectData.length]);
+  // }, [location, editData, open]);
 
   return (
     <div>

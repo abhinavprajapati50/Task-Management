@@ -2,6 +2,12 @@ import {
   COMPLETED_TASK_FAIL,
   COMPLETED_TASK_START,
   COMPLETED_TASK_SUCCESS,
+  DELETE_TASK_FAIL,
+  DELETE_TASK_START,
+  DELETE_TASK_SUCCESS,
+  DELETE_TEAM_FAIL,
+  DELETE_TEAM_START,
+  DELETE_TEAM_SUCCESS,
   GET_TEAM_FAIL,
   GET_TEAM_START,
   GET_TEAM_SUCCESS,
@@ -121,26 +127,26 @@ export const getJoinTeamTaskReducers = (state = initialState, action) => {
 //     }
 //   };
 
-//   export const deleteTaskReducer = (state = initialState, action) => {
-//     switch (action.type) {
-//       case DELETE_TASK_START:
-//         return {
-//           loading: true,
-//         };
-//       case DELETE_TASK_SUCCESS:
-//         return {
-//           ...state,
-//           loading: false,
-//           alltask: action.payload,
-//         };
+  export const deleteTeamReducer = (state = initialState, action) => {
+    switch (action.type) {
+      case DELETE_TEAM_START:
+        return {
+          loading: true,
+        };
+      case DELETE_TEAM_SUCCESS:
+        return {
+          ...state,
+          loading: false,
+          alltask: action.payload,
+        };
 
-//       case DELETE_TASK_FAIL:
-//         return {
-//           ...state,
-//           loading: false,
-//           error: action.payload,
-//         };
-//       default:
-//         return state;
-//     }
-//   };
+      case DELETE_TEAM_FAIL:
+        return {
+          ...state,
+          loading: false,
+          error: action.payload,
+        };
+      default:
+        return state;
+    }
+  };

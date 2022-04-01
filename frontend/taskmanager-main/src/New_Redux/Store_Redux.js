@@ -1,5 +1,3 @@
-
-//
 import { createStore, applyMiddleware, combineReducers } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
@@ -8,7 +6,7 @@ import storage from "redux-persist/lib/storage";
 import { loginReducer } from "./Reducers/LoginReducers";
 import { registerReducer } from "./Reducers/RegisterReducers";
 import { deleteTaskReducer, editTaskReducer, getAllTaskReducers, updateReducer } from "./Reducers/GetTaskReducers";
-import { getJoinTeamTaskReducers, getSingleTeamReducers, teamReducer } from "./Reducers/TeamReducers";
+import { deleteTeamReducer, getJoinTeamTaskReducers, getSingleTeamReducers, teamReducer } from "./Reducers/TeamReducers";
 import { getAllProjectReducers, projectsReducer } from "./Reducers/ProjectReducers";
 import { getAllProjectTasksJoinReducers } from "./Reducers/ProjectTaskReducer";
 
@@ -29,7 +27,8 @@ const rootReducer = combineReducers({
   getJoinTeamTaskReducers: getJoinTeamTaskReducers,
   projectsReducer: projectsReducer,
   getAllProjectReducers: getAllProjectReducers,
-  getAllProjectTasksJoinReducers:getAllProjectTasksJoinReducers
+  getAllProjectTasksJoinReducers: getAllProjectTasksJoinReducers, 
+  deleteTeamReducer:deleteTeamReducer
 
 });
 

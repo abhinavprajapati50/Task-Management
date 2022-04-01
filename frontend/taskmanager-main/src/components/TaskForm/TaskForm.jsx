@@ -61,14 +61,16 @@ const style = {
 
 function TaskForm({open, setopen}) {
   const [dead_line, setdead_line] = useState(new Date());
-  const [Assign_to, setAssign_to] = useState(null);
+  const [Assign_to, setAssign_to] = useState(0);
   const [task, setTask] = useState("");
   const [Alltask, setAlltask] = useState([]);
   const [description, setDescription] = useState("");
   const [teamData, setteamData] = useState([]);
   const [error, seterror] = useState("");
   const [allProjects, setallprojects] = useState([]);
-  const [projectName, setprojectName] = useState(null);
+  const [projectName, setprojectName] = useState(0);
+  const [status, setstatus] = useState(0);
+
   // const [open, setOpen] = useState(false)
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -104,13 +106,14 @@ console.log("---=-=-=",paramasId);
 
   const hnadleSubmit = async (e) => {
     e.preventDefault();
+    // console.log("-----------=-=-=taskData-", status, Assign_to);
     const taskData = {
       task,
       description,
       dueDate: dead_line,
       Assign_to,
+      // status
     };
-    console.log("-----------=-=-=taskData-", taskData);
     if (!task || !description || !dead_line) {
       return toast.error("All Fields required !!");
     }
@@ -254,10 +257,10 @@ console.log("---=-=-=",paramasId);
                           value={projectName}
                           onChange={(e) => setprojectName(e.target.value)}
                           // displayEmpty
-                          defaultValue={null}
+                          defaultValue={0}
                           // inputProps={{ "aria-label": "Without label" }}
                         >
-                          <MenuItem value={null}>
+                          <MenuItem value={0}>
                             <em>None</em>
                           </MenuItem>
 

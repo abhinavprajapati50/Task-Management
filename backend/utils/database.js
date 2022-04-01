@@ -1,12 +1,17 @@
-
 const Sequelize = require("sequelize/dist");
 
-const sequelize = new Sequelize('Task_Manager', 'root', 'admin@123', {
-    dialect: 'mysql',
-    host: 'localhost',
-})
+const sequelize = new Sequelize(
+  "Task_Manager",
+  "root",
+  "admin@123",
+  {
+    dialect: "mysql",
+    host: "localhost",
+  },
+  { logging: false }
+);
 
-module.exports = sequelize
+module.exports = sequelize;
 
 // const mysql = require('mysql2');
 

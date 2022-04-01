@@ -12,7 +12,7 @@ import "./Taskcss/Task_Details.css";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { getJoinTeamTaskAction } from "../../New_Redux/Actions/TeamActions";
-import { allTaskGet } from "../../New_Redux/Actions/getAllTask";
+import { allTaskGet, taskUpdateSuccess } from "../../New_Redux/Actions/getAllTask";
 
 export const TaskDetails = () => {
   const [allTasks, setallTasks] = useState([]);
@@ -21,6 +21,7 @@ export const TaskDetails = () => {
   const [assignTaskName, setassignTaskName] = useState("");
   const [subTasks, setsubTasks] = useState([]);
   const [teamName, setteamName] = useState("");
+  const [inProgress, setinProgress] = useState(false)
   const paramas = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -57,11 +58,26 @@ export const TaskDetails = () => {
 
     console.log("<<<<------------", assignedName.data.data.name);
   };
+  console.log("--------", subTasks);
 
   const handleDateDDMMYYFormat = (date) => {
     let theDate = new Date(Date.parse(date));
     return theDate.toLocaleDateString();
   };
+
+  const updtaeTask =  async (task) => {
+    console.log("+++++++++++", task);
+    
+    // const updateData = await taskUpdateSuccess(task)
+    setinProgress(true)
+    const updateTask = await axios.put(
+      `http://localhost:5000/task/edit/${task.id}`,
+      {status:3}
+    );
+    console.log("------------", updateTask);
+    console.log("------------", inProgress);
+
+  }
 
   useEffect(() => {
     getAllUser();
@@ -97,6 +113,7 @@ export const TaskDetails = () => {
                         assign to - <strong>{assignTaskName} </strong>
                       </Typography>
                     </CardContent>
+                      {/* <Button  variant="contained" onClick={()=> updtaeTask(currentTask)} >Accept Task</Button> */}
                   </Card>
                 </div>
               </>

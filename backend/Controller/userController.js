@@ -175,3 +175,49 @@ exports.signin = async (req, res) => {
     });
   }
 };
+
+
+// signinData
+
+
+exports.signinData = async (req, res, next) => {
+  const {userId} = req.body;
+  try {
+    // let token = req.headers["x-access-token"];
+    // let token = req.body.token || req.query.token || req.headers["x-access-token"];
+    // let data = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTA1LCJlbWFpbCI6Im5pcmFqQGdtYWlsLmNvbSIsInJvbGUiOjEsImlhdCI6MTY0ODQ0NTEzMiwiZXhwIjoxNjQ4NDQ1MTM1fQ.H6XUjl_TZRErmSQXkt6X71uKnEBPUGIxMSclgpWZI8c";
+    let data = req.headers.authorization;
+    console.log("--------------------------=", data);
+    
+// res.header(data)
+    // const tokens = jwt_decode(data);
+    // const tokenId = tokens.id
+    const all_Projects = await projectModal.findOne()
+    // const all_Projects = await projectModal.findAll({
+    //   order: [["id", "DESC"]],
+    //   include: taskModal,
+    //   include: User,
+    //   // //   attributes:['id' ]
+    //   where: {
+    //     status: 0, chr_delete:0  ,userId: tokenId
+    //       // [Op.not]: null
+        
+    //    },
+    // });
+    // --
+    console.log(all_Projects);
+    let resMessage = "All Projects rendered successfully.";
+
+    res.status(200).json({
+      status: true,
+      message: resMessage,
+      data: all_Projects,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: "Project is not redered!!!",
+      data: error || error.message,
+    });
+  }
+};

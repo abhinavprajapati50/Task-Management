@@ -21,6 +21,8 @@ import { allProjectGet } from "../../New_Redux/Actions/projectActions";
 import { Project_Form } from "./Project-Form";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
+import jwt_decode from "jwt-decode";
+
 // import { TaskUpdateForm } from "../TaskForm/TaskUpdateForm";
 
 const Backdrop = styled("div")`
@@ -64,6 +66,7 @@ export const Project_List = ({ setisLoggedIN, setloader }) => {
   const [open, setopen] = useState(false);
   const [editData, seteditData] = useState(null);
   const [isediting, setIsediting] = useState(false);
+  const [roleData, setroleData] = useState(null);
   const navgate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -72,9 +75,12 @@ export const Project_List = ({ setisLoggedIN, setloader }) => {
 
   setisLoggedIN(true);
   const allTaskFuncHandler = async () => {
+    const localStorageData = localStorage.getItem("token");
+    const jwtDecodeData = jwt_decode(localStorageData);
+    console.log("---------------------", jwtDecodeData.role);
     const allTask = await dispatch(allProjectGet());
     setloader(false);
-    console.log("-------------allTask", allTask);
+    setroleData(jwtDecodeData.role);
     setallTaskData(allTask.payload);
   };
 
@@ -107,7 +113,7 @@ export const Project_List = ({ setisLoggedIN, setloader }) => {
   };
 
   const handleModalToggle = () => {
-     setIsediting(false) 
+    setIsediting(false);
     setopen(true);
   };
 
@@ -120,14 +126,16 @@ export const Project_List = ({ setisLoggedIN, setloader }) => {
       {/* <Button  onClick={handleModalToggle}>
         Add Project
       </Button> */}
-      <Fab
-        // sx={fabStyle}
-        aria-label="Add"
-        color="primary"
-        onClick={handleModalToggle}
-      >
-        <AddIcon />
-      </Fab>
+      {roleData == 1 && (
+        <Fab
+          // sx={fabStyle}
+          aria-label="Add"
+          color="primary"
+          onClick={handleModalToggle}
+        >
+          <AddIcon />
+        </Fab>
+      )}
       <StyledModal
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
@@ -137,9 +145,9 @@ export const Project_List = ({ setisLoggedIN, setloader }) => {
       >
         <Box sx={style}>
           <Project_Form
-              open={open}
+            open={open}
             setopen={setopen}
-            {...(isediting ? { editData:  editData } : null)}
+            {...(isediting ? { editData: editData } : null)}
             //  {...(this.props.editable ? {editable: this.props.editableOpts} : {})} >
 
             // isediting={isediting}
@@ -176,13 +184,14 @@ export const Project_List = ({ setisLoggedIN, setloader }) => {
                   <CardActions>
                     {/* {taskInfo.completed == true && ( */}
 
-                    <Button
-                      variant="contained"
-                      onClick={() => editHandler(taskInfo)}
-                    >
-                      Edit
-                      <EditIcon />
-                    </Button>
+                    {roleData == 1 && (
+                      <Button
+                        variant="contained"
+                        onClick={() => editHandler(taskInfo)}
+                      >
+                        Edit
+                      </Button>
+                    )}
                     <Button
                       variant="contained"
                       onClick={() => viewHandler(taskInfo)}

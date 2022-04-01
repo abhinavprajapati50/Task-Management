@@ -16,7 +16,6 @@ exports.team = async (req, res, next) => {
   try {
     let data = req.headers.authorization;
     const tokens = jwt_decode(data);
-    console.log();
     const result_Team = await teamModal.create({
       name,
       gender,
@@ -96,6 +95,31 @@ exports.singleTeamUser = async (req, res) => {
       .status(500)
       .json({ status: false, message: error || error.message, data: error });
     // .json({ status: false, message: " Error in delete api", data: error });
+  }
+};
+
+exports.deletedTeamMember = async (req, res) => {
+  try {
+    let id = req.params.id;
+
+    const deletedTeamMember = await teamModal.destroy(
+      { where: { id: id } }
+    );
+    let resMessage = "Task Successfully Deleted.";
+console.log("==============deletedTeamMember");
+console.log("==============deletedTeamMember", deletedTeamMember);
+    res.status(200).json({
+      status: true,
+      message: resMessage,
+      data: deletedTeamMember,
+    });
+  } catch (error) {
+    console.log("error", error.message || error);
+    res.status(500).json({
+      status: false,
+      message: " Somethings wents wrong",
+      data: error || error.message,
+    });
   }
 };
 

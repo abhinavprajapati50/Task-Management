@@ -6,7 +6,7 @@ const User = require("../Model/User");
 
 exports.projects = async (req, res, next) => {
   const { project, description, dueDate, status, chr_delete } = req.body;
-  let data = req.headers.authorization ;
+  let data = req.headers.authorization;
       const tokens = jwt_decode(data);
   
   if (!project || !description || !dueDate) {
@@ -54,8 +54,8 @@ exports.AllProjects = async (req, res, next) => {
     const tokenId = tokens.id
     const all_Projects = await projectModal.findAll({
       order: [["id", "DESC"]],
-      include: taskModal,
-      include: User,
+      include: [taskModal, User],
+      // include: User,
       // //   attributes:['id' ]
       where: {
         status: 0, chr_delete:0  ,userId: tokenId 
